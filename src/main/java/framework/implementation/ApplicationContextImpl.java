@@ -2,6 +2,7 @@ package framework.implementation;
 
 import framework.ApplicationContext;
 import framework.annotations.Controller;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -19,12 +20,11 @@ public class ApplicationContextImpl implements ApplicationContext {
     }
 
     public void initializeContext() throws ClassNotFoundException, IOException, URISyntaxException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        findControllerClasses();
+        findControllerClasses("controller");
         initiateControllers();
     }
 
-    public void findControllerClasses() throws IOException, URISyntaxException, ClassNotFoundException {
-        String basePackage = "controller";
+    public void findControllerClasses(String basePackage) throws IOException, URISyntaxException, ClassNotFoundException {
         ClassLoader classLoader = ClassLoader.getSystemClassLoader();
         Enumeration<URL> resources = classLoader.getResources(basePackage);
         while (resources.hasMoreElements()) {
@@ -32,8 +32,10 @@ public class ApplicationContextImpl implements ApplicationContext {
             File file = new File(resource.toURI());
             for (File classFile : Objects.requireNonNull(file.listFiles())) {
                 String fileName = classFile.getName();
+                if (classFile.isDirectory()) findControllerClasses(basePackage + "/" + classFile.getName());
                 if (fileName.endsWith(".class")) {
                     String className = fileName.substring(0, fileName.lastIndexOf("."));
+                    basePackage = basePackage.replace("/", ".");
                     Class<?> classObject = Class.forName(basePackage + "." + className);
                     if (classObject.isAnnotationPresent(Controller.class)) {
                         ApplicationContextImpl.controllers.add(classObject);
@@ -42,6 +44,7 @@ public class ApplicationContextImpl implements ApplicationContext {
             }
         }
     }
+
 
     public void initiateControllers() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         for (Class<?> clazz : getControllers()) {

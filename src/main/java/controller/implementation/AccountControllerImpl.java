@@ -2,7 +2,6 @@ package controller.implementation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
-import controller.AbstractController;
 import controller.AccountController;
 import framework.annotations.Controller;
 import framework.annotations.RequestMapping;
@@ -11,7 +10,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 @Controller(path = "/account")
-public class AccountControllerImpl extends AbstractController implements AccountController {
+public class AccountControllerImpl extends AbstractControllerImpl implements AccountController {
 
     @RequestMapping(path = "", requestMethod = "get")
     public void handleCardRequest(HttpExchange exchange) throws IOException {

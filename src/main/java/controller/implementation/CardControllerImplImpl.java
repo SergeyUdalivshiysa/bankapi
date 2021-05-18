@@ -2,8 +2,8 @@ package controller.implementation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
-import controller.AbstractController;
 import controller.CardController;
+import controller.implementation.AbstractControllerImpl;
 import framework.annotations.Controller;
 import framework.annotations.RequestMapping;
 import model.entities.Card;
@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 @Controller(path = "/card")
-public class CardControllerImpl extends AbstractController implements CardController {
+public class CardControllerImplImpl extends AbstractControllerImpl implements CardController {
 
     private final CardRepository CARD_REPO = new CardRepositoryImpl();
 
@@ -31,7 +31,6 @@ public class CardControllerImpl extends AbstractController implements CardContro
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     @RequestMapping(path = "/{id}", requestMethod = "GET")

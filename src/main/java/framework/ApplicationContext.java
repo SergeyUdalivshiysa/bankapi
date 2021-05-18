@@ -7,7 +7,7 @@ public interface ApplicationContext {
 
     void initializeContext() throws Exception;
 
-    void findControllerClasses() throws Exception;
+    void findControllerClasses(String basePackage) throws Exception;
 
     void initiateControllers() throws Exception;
 
