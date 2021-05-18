@@ -3,8 +3,8 @@ package controller.implementation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import controller.CardController;
-import controller.implementation.AbstractControllerImpl;
 import framework.annotations.Controller;
+import framework.annotations.PathVariable;
 import framework.annotations.RequestMapping;
 import model.entities.Card;
 import model.repository.CardRepository;
@@ -17,7 +17,7 @@ public class CardControllerImplImpl extends AbstractControllerImpl implements Ca
 
     private final CardRepository CARD_REPO = new CardRepositoryImpl();
 
-    @RequestMapping(path = "", requestMethod = "GET")
+    @RequestMapping(path = "/", requestMethod = "GET")
     public void findAll(HttpExchange exchange) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
@@ -33,7 +33,7 @@ public class CardControllerImplImpl extends AbstractControllerImpl implements Ca
         }
     }
 
-    @RequestMapping(path = "/{id}", requestMethod = "GET")
+    @RequestMapping(path = "/test/{id}", requestMethod = "GET")
     public void getCardById(HttpExchange exchange, String id) {
         System.out.println(id);
     }

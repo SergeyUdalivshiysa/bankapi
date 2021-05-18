@@ -8,6 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,6 +27,8 @@ abstract public class AbstractControllerImpl {
     void dispatch(HttpExchange exchange) {
         String path = exchange.getRequestURI().getRawPath();
         String remainingPath = path.replace(basePath, "");
+        if (remainingPath.endsWith("/")) remainingPath = remainingPath.substring(0, remainingPath.length()-1);
+        if (remainingPath.equals("")) remainingPath = "/";
         try {
             if (isPathValid(remainingPath)) getAndInvokeMethod(exchange, remainingPath);
             else sendNotFound(exchange);
@@ -38,7 +41,7 @@ abstract public class AbstractControllerImpl {
     }
 
     protected boolean isPathValid(String remainingPath) {
-        return remainingPath.matches("/?\\w*");
+        return remainingPath.matches("/[\\w/]*");
     }
 
     protected void sendNotFound(HttpExchange exchange) {
@@ -46,12 +49,32 @@ abstract public class AbstractControllerImpl {
     }
 
     protected void getAndInvokeMethod(HttpExchange exchange, String remainingPath) throws InvocationTargetException, IllegalAccessException {
-        remainingPath = remainingPath.length() > 0 ? remainingPath.substring(1) : remainingPath;
         String requestMethod = exchange.getRequestMethod();
         List<Method> filteredByMethodMethods = getMethodsByRequestMethod(requestMethod);
         Method method = getMethodByPathVariable(filteredByMethodMethods, remainingPath);
-        if (getPath(method).equals("")) method.invoke(this, exchange);
-        else method.invoke(this, exchange, remainingPath);
+        if (method != null) {
+            invokeMethod(method, exchange, remainingPath);
+        }
+        else sendNotFound(exchange);
+    }
+
+    protected void invokeMethod(Method method, HttpExchange exchange, String remainingPath) throws InvocationTargetException, IllegalAccessException {
+       int parameterNumber =  method.getParameterTypes().length;
+       if (parameterNumber == 1) method.invoke(this, exchange);
+       if (parameterNumber > 1) {
+           String parameter = getParameter(remainingPath, getMethodPath(method));
+           method.invoke(this, exchange, parameter);
+       }
+    }
+
+    protected String getParameter(String remainingPath, String methodPath){
+        int indexOfBracket = methodPath.indexOf("{");
+        remainingPath = remainingPath.substring(indexOfBracket);
+        int indexOfSlash = remainingPath.indexOf("/");
+        if (indexOfSlash < 0) {
+            return remainingPath;
+        }
+        return remainingPath.substring(0, remainingPath.indexOf("/"));
     }
 
     protected List<Method> getMethodsByRequestMethod(String requestMethod) {
@@ -63,16 +86,24 @@ abstract public class AbstractControllerImpl {
     }
 
     protected Method getMethodByPathVariable(List<Method> methods, String remainingPath) {
+       Optional<Method> optional = methods.stream()
+               .filter(method -> remainingPath.matches(getMethodPathRegex(method))).findFirst();
+        return optional.orElse(null);
+    }
+
+    /*protected Method getMethodByPathVariable(List<Method> methods, String remainingPath) {
         if (remainingPath.equals("")) return methods
                 .stream()
                 .filter(method -> getPath(method).equals(""))
                 .findFirst().get();
         else return methods.stream().filter(method -> getPath(method).matches("/\\{\\w+\\}")).findFirst().get();
-    }
+    }*/
 
-    protected String getPath(Method method) {
+    protected String getMethodPath(Method method) {
         return method.getAnnotation(RequestMapping.class).path();
     }
 
-
+    protected String getMethodPathRegex(Method method) {
+        return getMethodPath(method).replaceAll("\\{.*?\\}", "\\\\w+");
+    }
 }

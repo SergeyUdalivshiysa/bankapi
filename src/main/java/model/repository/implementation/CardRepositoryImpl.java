@@ -2,7 +2,6 @@ package model.repository.implementation;
 
 import model.entities.Card;
 import model.repository.CardRepository;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +13,11 @@ public class CardRepositoryImpl implements CardRepository {
             PreparedStatement ps = connection.prepareStatement("select * from card");
             ResultSet resultSet = ps.executeQuery();
             while (resultSet.next()) {
-                Card card = new Card(resultSet.getInt(1), resultSet.getString(2), resultSet.getInt(3), resultSet.getBoolean(4));
+                Card card = new Card(
+                        resultSet.getInt(1),
+                        resultSet.getString(2),
+                        resultSet.getInt(3),
+                        resultSet.getBoolean(4));
                 cards.add(card);
             }
         } catch (SQLException throwables) {
