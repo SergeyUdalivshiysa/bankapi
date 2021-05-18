@@ -1,14 +1,27 @@
-POST http://localhost:8080/card
+PUT http://localhost:8080/account
+Content-Type: application/json
+
+{
+  "id": 88,
+  "amount": 200999.00
+}
+
+###
+GET http://localhost:8080/account
+Accept: application/json
+
+###
+POST http://localhost:8080/card/
 Content-Type: application/json
 
 {
   "number": "LA TEST",
   "account_id": 1,
-  "active": false
+  "active": true
 }
 
 ###
-GET http://localhost:8080/card/test/54
+GET http://localhost:8080/card
 Accept: application/json
 
 

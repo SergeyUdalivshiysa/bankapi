@@ -4,6 +4,7 @@ import com.sun.net.httpserver.HttpExchange;
 import framework.annotations.Controller;
 import framework.annotations.RequestMapping;
 import web.Server;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -37,7 +38,6 @@ abstract public class AbstractControllerImpl {
             e.printStackTrace();
             sendNotFound(exchange);
         }
-
     }
 
     protected boolean isPathValid(String remainingPath) {
@@ -45,7 +45,12 @@ abstract public class AbstractControllerImpl {
     }
 
     protected void sendNotFound(HttpExchange exchange) {
-
+        try {
+            exchange.sendResponseHeaders(404, 0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        exchange.close();
     }
 
     protected void getAndInvokeMethod(HttpExchange exchange, String remainingPath) throws InvocationTargetException, IllegalAccessException {
@@ -90,14 +95,6 @@ abstract public class AbstractControllerImpl {
                .filter(method -> remainingPath.matches(getMethodPathRegex(method))).findFirst();
         return optional.orElse(null);
     }
-
-    /*protected Method getMethodByPathVariable(List<Method> methods, String remainingPath) {
-        if (remainingPath.equals("")) return methods
-                .stream()
-                .filter(method -> getPath(method).equals(""))
-                .findFirst().get();
-        else return methods.stream().filter(method -> getPath(method).matches("/\\{\\w+\\}")).findFirst().get();
-    }*/
 
     protected String getMethodPath(Method method) {
         return method.getAnnotation(RequestMapping.class).path();

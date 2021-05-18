@@ -107,7 +107,7 @@ insert into card (id, number, account_id, active) values (1, '1234324', 1, true)
 	at org.h2.command.Command.executeUpdate(Command.java:253)
 	at org.h2.jdbc.JdbcStatement.executeUpdateInternal(JdbcStatement.java:130)
 	at org.h2.jdbc.JdbcStatement.executeUpdate(JdbcStatement.java:115)
-	at model.repository.DataBaseFiller.fill(DataBaseFiller.java:22)
+	at model.repository.util.DataBaseFiller.fill(DataBaseFiller.java:22)
 	at App.main(App.java:14)
 2021-05-17 17:33:56 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLException: Столбец "USER_ID" не найден
@@ -261,3 +261,31 @@ insert into card (number, user_id, active) values (?, ?, ?)  [42122-190]
 	at jdk.httpserver/sun.net.httpserver.ServerImpl$Dispatcher.handle(ServerImpl.java:442)
 	at jdk.httpserver/sun.net.httpserver.ServerImpl$Dispatcher.run(ServerImpl.java:408)
 	at java.base/java.lang.Thread.run(Thread.java:834)
+2021-05-18 15:21:22 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Синтаксическая ошибка в выражении SQL "UPDATE ACCOUNT SET AMOUNT = SUM(([*]SELECT AMOUNT FROM ACCOUNT WHERE ID = ?), ?) WHERE ID = ?; "
+Syntax error in SQL statement "UPDATE ACCOUNT SET AMOUNT = SUM(([*]SELECT AMOUNT FROM ACCOUNT WHERE ID = ?), ?) WHERE ID = ?; "; SQL statement:
+update account set amount = sum((select amount from account where id = ?), ?) WHERE id = ?; [42000-190]
+2021-05-18 15:21:38 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Синтаксическая ошибка в выражении SQL "UPDATE ACCOUNT SET AMOUNT = SUM(([*]SELECT AMOUNT FROM ACCOUNT WHERE ID = ?), ?) WHERE ID = ?; "
+Syntax error in SQL statement "UPDATE ACCOUNT SET AMOUNT = SUM(([*]SELECT AMOUNT FROM ACCOUNT WHERE ID = ?), ?) WHERE ID = ?; "; SQL statement:
+update account set amount = sum((select amount from account where id = ?), ?) WHERE id = ?; [42000-190]
+2021-05-18 15:23:30 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Синтаксическая ошибка в выражении SQL "UPDATE ACCOUNT SET AMOUNT = SUM(([*]SELECT AMOUNT FROM ACCOUNT WHERE ID = ?) A, ?) WHERE ID = ?; "
+Syntax error in SQL statement "UPDATE ACCOUNT SET AMOUNT = SUM(([*]SELECT AMOUNT FROM ACCOUNT WHERE ID = ?) A, ?) WHERE ID = ?; "; SQL statement:
+update account set amount = sum((select amount from account where id = ?) a, ?) WHERE id = ?; [42000-190]
+2021-05-18 15:44:35 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Синтаксическая ошибка в выражении SQL "IF[*] EXIST UPDATE ACCOUNT SET AMOUNT = AMOUNT + ? WHERE ID = ?; "; ожидалось "INSERT, {"
+Syntax error in SQL statement "IF[*] EXIST UPDATE ACCOUNT SET AMOUNT = AMOUNT + ? WHERE ID = ?; "; expected "INSERT, {"; SQL statement:
+if exist update account set amount = amount + ? where id = ?; [42001-190]
+2021-05-18 15:44:55 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Синтаксическая ошибка в выражении SQL "IF[*] EXIST UPDATE ACCOUNT SET AMOUNT = AMOUNT + ? WHERE ID = ?; "; ожидалось "INSERT, {"
+Syntax error in SQL statement "IF[*] EXIST UPDATE ACCOUNT SET AMOUNT = AMOUNT + ? WHERE ID = ?; "; expected "INSERT, {"; SQL statement:
+if exist update account set amount = amount + ? where id = ?; [42001-190]
+2021-05-18 15:46:07 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Таблица "IF" не найдена
+Table "IF" not found; SQL statement:
+update if exist account set amount = amount + ? where id = ?; [42102-190]
+2021-05-18 15:46:37 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Синтаксическая ошибка в выражении SQL "UPDATE ACCOUNT IF EXIST[*] SET AMOUNT = AMOUNT + ? WHERE ID = ?; "; ожидалось "SET"
+Syntax error in SQL statement "UPDATE ACCOUNT IF EXIST[*] SET AMOUNT = AMOUNT + ? WHERE ID = ?; "; expected "SET"; SQL statement:
+update account if exist set amount = amount + ? where id = ?; [42001-190]

@@ -1,6 +1,5 @@
-package model.entities;
+package model.repository.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,9 +9,10 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-public class Account {
+public class AccountMoneyDTO {
     int id;
     BigDecimal amount;
-    int userId;
 }
+
+
+

@@ -1,4 +1,4 @@
-package model.repository;
+package model.repository.util;
 
 import java.io.IOException;
 import java.nio.file.Files;
