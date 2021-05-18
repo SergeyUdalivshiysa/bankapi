@@ -1,0 +1,15 @@
+POST http://localhost:8080/card
+Content-Type: application/json
+
+{
+  "number": "LA TEST",
+  "account_id": 1,
+  "active": false
+}
+
+###
+GET http://localhost:8080/card
+Accept: application/json
+
+
+###
