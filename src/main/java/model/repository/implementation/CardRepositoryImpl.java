@@ -1,11 +1,13 @@
-package model.repository;
+package model.repository.implementation;
 
 import model.entities.Card;
+import model.repository.CardRepository;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CardRepositoryImpl implements CardRepository{
+public class CardRepositoryImpl implements CardRepository {
     public List<Card> getAllCards(){
         List<Card> cards = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection("jdbc:h2:/Users/a19189114/IdeaProjects/bankapi/src/main/resources/db/test/testbd");) {

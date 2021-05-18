@@ -1,5 +1,5 @@
-import controller.CardController;
 import framework.ApplicationContext;
+import framework.implementation.ApplicationContextImpl;
 import model.repository.DataBaseFiller;
 import web.Server;
 
@@ -9,7 +9,7 @@ import java.net.URISyntaxException;
 
 
 public class App {
-    public static void main(String[] args){
+    public static void main(String[] args) {
         try {
             Server.initializeServer();
         } catch (IOException e) {
@@ -18,13 +18,11 @@ public class App {
         }
         DataBaseFiller.fill();
         try {
-            ApplicationContext.initializeContext();
-        } catch (URISyntaxException | ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException | IOException e) {
+            ApplicationContext applicationContext = new ApplicationContextImpl();
+            applicationContext.initializeContext();
+        } catch (Exception e) {
             System.out.println("Ошибка инициализации контекста");
             e.printStackTrace();
         }
-
     }
-
-
 }
