@@ -2,7 +2,6 @@ package framework.implementation;
 
 import framework.ApplicationContext;
 import framework.annotations.Controller;
-
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
