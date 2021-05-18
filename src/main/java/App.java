@@ -9,12 +9,17 @@ import java.net.URISyntaxException;
 
 
 public class App {
-    public static void main(String[] args) throws IOException {
-        Server.initializeServer();
+    public static void main(String[] args){
+        try {
+            Server.initializeServer();
+        } catch (IOException e) {
+            System.out.println("Ошибка инициализакии сервера");
+            e.printStackTrace();
+        }
         DataBaseFiller.fill();
         try {
             ApplicationContext.initializeContext();
-        } catch (URISyntaxException | ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
+        } catch (URISyntaxException | ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException | IOException e) {
             System.out.println("Ошибка инициализации контекста");
             e.printStackTrace();
         }

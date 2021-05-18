@@ -6,17 +6,20 @@ import framework.annotations.Controller;
 import framework.annotations.RequestMapping;
 import model.entities.Card;
 import model.repository.CardRepository;
+import model.repository.CardRepositoryImpl;
 import java.io.IOException;
 import java.io.OutputStream;
 
 @Controller(path = "/card")
 public class CardController extends AbstractController {
 
+    private final CardRepository CARD_REPO = new CardRepositoryImpl();
+
     @RequestMapping(path = "", requestMethod = "GET")
     public void findAll(HttpExchange exchange) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            String respText = objectMapper.writeValueAsString(CardRepository.getAllCards());
+            String respText = objectMapper.writeValueAsString(CARD_REPO.getAllCards());
             exchange.getResponseHeaders().add("content-type", "application/json");
             exchange.sendResponseHeaders(200, respText.length());
             OutputStream output = exchange.getResponseBody();
@@ -39,8 +42,7 @@ public class CardController extends AbstractController {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             Card card = objectMapper.readValue(exchange.getRequestBody(), Card.class);
-            System.out.println(card);
-            CardRepository.postCard(card);
+            CARD_REPO.postCard(card);
             exchange.sendResponseHeaders(201, 0);
             exchange.close();
         } catch (IOException e) {
