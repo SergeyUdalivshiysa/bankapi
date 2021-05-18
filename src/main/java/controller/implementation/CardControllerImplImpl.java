@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import controller.CardController;
 import framework.annotations.Controller;
-import framework.annotations.PathVariable;
 import framework.annotations.RequestMapping;
 import model.entities.Card;
 import model.repository.CardRepository;
