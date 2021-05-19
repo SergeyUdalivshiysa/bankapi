@@ -7,6 +7,10 @@ create table user
 (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name varchar not null,
+    counterparty boolean,
+    legal_entity boolean,
+    partner_id int,
+    foreign key (partner_id) references user (id)
 );
 
 create table account
@@ -37,7 +41,7 @@ create table payment
     foreign key (receiver_id) references account (id)
 );
 
-insert into user (id, name) values (1, 'Victor');
+insert into user (id, name, counterparty, legal_entity) values (1, 'Victor', true, false);
 
 insert into user (id, name) values (2, 'Vlad');
 

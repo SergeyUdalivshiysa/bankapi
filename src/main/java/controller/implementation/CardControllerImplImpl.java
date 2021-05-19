@@ -7,7 +7,7 @@ import framework.annotations.RequestMapping;
 import model.service.CardService;
 import model.service.implementation.CardServiceImpl;
 
-@Controller(path = "/card")
+@Controller(path = "/cards")
 public class CardControllerImplImpl extends AbstractControllerImpl implements CardController {
 
     private final CardService CARD_SERVICE = new CardServiceImpl();

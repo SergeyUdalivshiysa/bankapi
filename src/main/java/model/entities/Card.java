@@ -7,12 +7,9 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-
 public class Card {
-
     int id;
     String number;
     int account_id;
-    boolean active;
-
+    boolean isActive;
 }

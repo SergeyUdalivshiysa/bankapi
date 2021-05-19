@@ -289,3 +289,131 @@ update if exist account set amount = amount + ? where id = ?; [42102-190]
 org.h2.jdbc.JdbcSQLException: Синтаксическая ошибка в выражении SQL "UPDATE ACCOUNT IF EXIST[*] SET AMOUNT = AMOUNT + ? WHERE ID = ?; "; ожидалось "SET"
 Syntax error in SQL statement "UPDATE ACCOUNT IF EXIST[*] SET AMOUNT = AMOUNT + ? WHERE ID = ?; "; expected "SET"; SQL statement:
 update account if exist set amount = amount + ? where id = ?; [42001-190]
+2021-05-18 17:32:53 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Таблица "ACOOUNT" не найдена
+Table "ACOOUNT" not found; SQL statement:
+insert into card (number, account_id, active) values (?, (select id from acoount where id = ?), ?)  [42102-190]
+2021-05-19 10:56:08 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Таблица "USERS" не найдена
+Table "USERS" not found; SQL statement:
+select * from users where counterparty = true [42102-190]
+2021-05-19 11:42:13 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Ошибка преобразования данных при конвертации "Victor"
+Data conversion error converting "Victor" [22018-190]
+2021-05-19 11:42:19 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Ошибка преобразования данных при конвертации "Victor"
+Data conversion error converting "Victor" [22018-190]
+2021-05-19 11:48:04 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Столбец "COUNTERPARY" не найден
+Column "COUNTERPARY" not found; SQL statement:
+insert into user (name, counterpary, legal_entity) values (?, ?, ?) [42122-190]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:345)
+	at org.h2.message.DbException.get(DbException.java:179)
+	at org.h2.message.DbException.get(DbException.java:155)
+	at org.h2.table.Table.getColumn(Table.java:660)
+	at org.h2.command.Parser.parseColumn(Parser.java:855)
+	at org.h2.command.Parser.parseColumnList(Parser.java:839)
+	at org.h2.command.Parser.parseInsert(Parser.java:1039)
+	at org.h2.command.Parser.parsePrepared(Parser.java:400)
+	at org.h2.command.Parser.parse(Parser.java:304)
+	at org.h2.command.Parser.parse(Parser.java:276)
+	at org.h2.command.Parser.prepareCommand(Parser.java:241)
+	at org.h2.engine.Session.prepareLocal(Session.java:460)
+	at org.h2.engine.Session.prepareCommand(Session.java:402)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1188)
+	at org.h2.jdbc.JdbcPreparedStatement.<init>(JdbcPreparedStatement.java:72)
+	at org.h2.jdbc.JdbcConnection.prepareStatement(JdbcConnection.java:276)
+	at model.repository.implementation.UserRepositoryImpl.postUser(UserRepositoryImpl.java:30)
+	at model.service.implementation.UserServiceImpl.handleCreate(UserServiceImpl.java:35)
+	at controller.implementation.UserControllerImpl.createCard(UserControllerImpl.java:23)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at controller.implementation.AbstractControllerImpl.invokeMethod(AbstractControllerImpl.java:68)
+	at controller.implementation.AbstractControllerImpl.getAndInvokeMethod(AbstractControllerImpl.java:61)
+	at controller.implementation.AbstractControllerImpl.dispatch(AbstractControllerImpl.java:34)
+	at jdk.httpserver/com.sun.net.httpserver.Filter$Chain.doFilter(Filter.java:77)
+	at jdk.httpserver/sun.net.httpserver.AuthFilter.doFilter(AuthFilter.java:82)
+	at jdk.httpserver/com.sun.net.httpserver.Filter$Chain.doFilter(Filter.java:80)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl$Exchange$LinkHandler.handle(ServerImpl.java:692)
+	at jdk.httpserver/com.sun.net.httpserver.Filter$Chain.doFilter(Filter.java:77)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl$Exchange.run(ServerImpl.java:664)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl$DefaultExecutor.execute(ServerImpl.java:159)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl$Dispatcher.handle(ServerImpl.java:442)
+	at jdk.httpserver/sun.net.httpserver.ServerImpl$Dispatcher.run(ServerImpl.java:408)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+2021-05-19 13:49:33 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLException: Столбец "PARTNER_ID" не найден
+Column "PARTNER_ID" not found; SQL statement:
+
+
+create table user
+(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name varchar not null,
+    counterparty boolean,
+    legal_entity boolean,
+    id_of_counterparty int,
+    foreign key (partner_id) references user (id)
+);
+
+create table account
+(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    amount decimal (20, 2) default 0.00,
+    user_id int not null,
+    foreign key (user_id) references user (id)
+);
+
+create table card
+(
+    id     INT PRIMARY KEY AUTO_INCREMENT,
+    number varchar not null,
+    account_id int not null,
+    foreign key (account_id) references account (id),
+    active boolean
+);
+
+create table payment
+(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    amount decimal (20, 2) default 0.00,
+    approved boolean,
+    sender_id int not null,
+    receiver_id int not null,
+    foreign key (sender_id) references account (id),
+    foreign key (receiver_id) references account (id)
+);
+
+insert into user (id, name, counterparty, legal_entity) values (1, 'Victor', true, false);
+
+insert into user (id, name) values (2, 'Vlad');
+
+insert into account (id, amount, user_id) values (1, '200.50', 1);
+
+insert into card (id, number, account_id, active) values (1, '1234324', 1, true); [42122-190]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:345)
+	at org.h2.message.DbException.get(DbException.java:179)
+	at org.h2.message.DbException.get(DbException.java:155)
+	at org.h2.table.Table.getColumn(Table.java:660)
+	at org.h2.table.IndexColumn.mapColumns(IndexColumn.java:74)
+	at org.h2.command.ddl.AlterTableAddConstraint.tryUpdate(AlterTableAddConstraint.java:197)
+	at org.h2.command.ddl.AlterTableAddConstraint.update(AlterTableAddConstraint.java:72)
+	at org.h2.command.ddl.CreateTable.update(CreateTable.java:171)
+	at org.h2.command.CommandContainer.update(CommandContainer.java:78)
+	at org.h2.command.Command.executeUpdate(Command.java:253)
+	at org.h2.command.CommandList.update(CommandList.java:42)
+	at org.h2.command.CommandList.executeRemaining(CommandList.java:36)
+	at org.h2.command.CommandList.update(CommandList.java:43)
+	at org.h2.command.CommandList.executeRemaining(CommandList.java:36)
+	at org.h2.command.CommandList.update(CommandList.java:43)
+	at org.h2.command.CommandList.executeRemaining(CommandList.java:36)
+	at org.h2.command.CommandList.update(CommandList.java:43)
+	at org.h2.command.CommandList.executeRemaining(CommandList.java:36)
+	at org.h2.command.CommandList.update(CommandList.java:43)
+	at org.h2.command.Command.executeUpdate(Command.java:253)
+	at org.h2.jdbc.JdbcStatement.executeUpdateInternal(JdbcStatement.java:130)
+	at org.h2.jdbc.JdbcStatement.executeUpdate(JdbcStatement.java:115)
+	at model.repository.util.DataBaseFiller.fill(DataBaseFiller.java:22)
+	at App.main(App.java:16)
