@@ -1,16 +1,19 @@
 package model.repository;
 
-import exception.NoSuchAccountException;
 import model.entities.Account;
+import model.repository.dto.AccountDTO;
 import model.repository.dto.AccountMoneyDTO;
 
 import java.sql.SQLException;
 import java.util.List;
 
-public interface AccountRepository {
-    void update(AccountMoneyDTO dto) throws NoSuchAccountException, SQLException;
+public interface AccountRepository extends Repository {
+
+    void update(AccountMoneyDTO dto) throws SQLException;
 
     List<Account> getAllAccounts() throws SQLException;
 
-    public AccountMoneyDTO getBalance(String id) throws SQLException, NoSuchAccountException;
+    AccountMoneyDTO getBalance(String id) throws SQLException;
+
+    void addAccount(AccountDTO accountDTO) throws SQLException;
 }

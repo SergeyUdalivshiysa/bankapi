@@ -1,44 +1,116 @@
-POST http://localhost:8080/users/1/counterparties
+//Список неподтвержденных платежей
+GET http://localhost:8080/payments/unapproved
+Accept: application/json
+
+###
+
+//Потдтверить платеж
+PUT http://localhost:8080/payments/approve/66
+Accept: application/json
+
+###
+
+
+
+//Активировать карту
+PUT http://localhost:8080/cards/approve/3
+Accept: application/json
+
+###
+
+//Список неактивированных карт
+GET http://localhost:8080/cards/unapproved
+Accept: application/json
+
+###
+
+
+
+//Добавление счета
+POST http://localhost:8080/accounts
 Content-Type: application/json
 
 {
-  "name": "IP EGORKA",
-  "legalEntity": true
+  "userId": 2
 }
 
 ###
+
+//Добавление физ лица
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+  "name": "JEKA",
+  "legalEntity": "false"
+}
+
+###
+
+//Модуль 2
+
+//Перевод средств контрагенту
+POST http://localhost:8080/payments
+Content-Type: application/json
+
+{
+  "amount": 200.00,
+  "senderId": 1,
+  "receiverId": 2
+}
+
+###
+
+//Добавление контрагента
+POST http://localhost:8080/users/counterparties
+Content-Type: application/json
+
+{
+  "partyId": 1,
+  "counterpartyId": 5
+}
+
+###
+
+//Просмотр контрагентов
 GET http://localhost:8080/users/1/counterparties
 Accept: application/json
 
 ###
-GET http://localhost:8080/account/33/balance
-Accept: application/json
 
-###
-PUT http://localhost:8080/account
+//Первый модуль
+
+//Внесение средств
+PUT http://localhost:8080/accounts
 Content-Type: application/json
 
 {
-  "id": 88,
-  "amount": 200999.00
+  "id": 1,
+  "amount": -12323
 }
 
 ###
-GET http://localhost:8080/account
+
+//Проверка баланса
+GET http://localhost:8080/accounts/3/balance
 Accept: application/json
 
+
+//Выпуск новой карты по счету
 ###
-POST http://localhost:8080/card/
+POST http://localhost:8080/cards/
 Content-Type: application/json
 
 {
   "number": "LA TEST",
-  "account_id": 1,
+  "account_id": 6,
   "active": false
 }
 
 ###
-GET http://localhost:8080/card
+
+//Список карт
+GET http://localhost:8080/cards
 Accept: application/json
 
 

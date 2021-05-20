@@ -1,9 +1,11 @@
 package controller.implementation;
 
 import com.sun.net.httpserver.HttpExchange;
+import controller.AbstractController;
 import framework.annotations.Controller;
 import framework.annotations.RequestMapping;
-import web.Server;
+import framework.web.Server;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -13,7 +15,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-abstract public class AbstractControllerImpl {
+abstract public class AbstractControllerImpl implements AbstractController {
 
     protected Set<Method> methodSet = Arrays.stream(this.getClass().getMethods())
             .filter(method -> method.isAnnotationPresent(RequestMapping.class))
@@ -21,20 +23,20 @@ abstract public class AbstractControllerImpl {
 
     protected String basePath = this.getClass().getAnnotation(Controller.class).path();
 
-    public void initialize(){
+    @Override
+    public void initialize() {
         Server.getServer().createContext(basePath, this::dispatch);
     }
 
-    void dispatch(HttpExchange exchange) {
+    protected void dispatch(HttpExchange exchange) {
         String path = exchange.getRequestURI().getRawPath();
         String remainingPath = path.replace(basePath, "");
-        if (remainingPath.endsWith("/")) remainingPath = remainingPath.substring(0, remainingPath.length()-1);
+        if (remainingPath.endsWith("/")) remainingPath = remainingPath.substring(0, remainingPath.length() - 1);
         if (remainingPath.equals("")) remainingPath = "/";
         try {
             if (isPathValid(remainingPath)) getAndInvokeMethod(exchange, remainingPath);
             else sendNotFound(exchange);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             sendNotFound(exchange);
         }

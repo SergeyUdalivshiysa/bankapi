@@ -1,7 +1,8 @@
 import framework.ApplicationContext;
 import framework.implementation.ApplicationContextImpl;
+import framework.web.Server;
 import model.repository.util.DataBaseFiller;
-import web.Server;
+
 import java.io.IOException;
 
 public class App {
@@ -13,7 +14,8 @@ public class App {
             System.out.println("Ошибка инициализакии сервера");
             e.printStackTrace();
         }
-        DataBaseFiller.fill();
+        DataBaseFiller dataBaseFiller = new DataBaseFiller();
+        dataBaseFiller.fill();
         try {
             ApplicationContext applicationContext = new ApplicationContextImpl();
             applicationContext.initializeContext();

@@ -10,17 +10,24 @@ import model.service.implementation.UserServiceImpl;
 @Controller(path = "/users")
 public class UserControllerImpl extends AbstractControllerImpl implements UserController {
 
-    private final UserService USER_SERVICE = new UserServiceImpl();
+    private final UserService userService = new UserServiceImpl();
 
+    @Override
     @RequestMapping(path = "/{id}/counterparties", requestMethod = "GET")
     public void findAllCounterpartiesByUser(HttpExchange exchange, String id) {
-        USER_SERVICE.handleFindAllCounterpartiesByUserId(exchange, id);
+        userService.handleFindCounterpartiesByUserId(exchange, id);
     }
 
+    @Override
+    @RequestMapping(path = "/counterparties", requestMethod = "POST")
+    public void addCounterparty(HttpExchange exchange) {
+        userService.handleAddCounterparty(exchange);
+    }
 
-    @RequestMapping(path = "/{id}/counterparties", requestMethod = "POST")
-    public void createCounterpartyForUser(HttpExchange exchange, String id) {
-        USER_SERVICE.handleCreate(exchange, id);
+    @Override
+    @RequestMapping(path = "/", requestMethod = "POST")
+    public void createUser(HttpExchange exchange) {
+        userService.handleCreateUser(exchange);
     }
 
 }

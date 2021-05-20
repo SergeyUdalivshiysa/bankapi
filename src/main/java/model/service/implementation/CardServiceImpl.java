@@ -8,33 +8,62 @@ import model.repository.CardRepository;
 import model.repository.implementation.CardRepositoryImpl;
 import model.service.CardService;
 import model.service.utils.ResponseHandler;
+
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.SQLException;
+import java.util.List;
 
 public class CardServiceImpl implements CardService {
 
-    private final CardRepository CARD_REPO = new CardRepositoryImpl();
-    private final ObjectMapper OM = new ObjectMapper();
-    private final ResponseHandler RH = new ResponseHandler();
+    private final CardRepository cardRepository = new CardRepositoryImpl();
+    private final ObjectMapper mapper = new ObjectMapper();
+    private final ResponseHandler responseHandler = new ResponseHandler();
 
     public void handleFindAll(HttpExchange exchange) {
         try {
-            String respText = OM.writeValueAsString(CARD_REPO.getAllCards());
-            RH.handleResponseWithJsonBody(exchange, respText, 200);
+            handleFindCards(exchange, cardRepository.getAllCards());
         } catch (IOException | SQLException e) {
             e.printStackTrace();
+            ExceptionHandler.handleException(exchange, e);
         }
     }
 
+    @Override
     public void handleCreateCard(HttpExchange exchange) {
         try {
-            Card card = OM.readValue(exchange.getRequestBody(), Card.class);
-            CARD_REPO.postCard(card);
-            RH.handleResponseWithNoBody(exchange, 201);
+            Card card = mapper.readValue(exchange.getRequestBody(), Card.class);
+            cardRepository.postCard(card);
+            responseHandler.handleSuccessfulResponse(exchange, 201);
         } catch (Exception e) {
             e.printStackTrace();
+            ExceptionHandler.handleException(exchange, e);
         }
+    }
+
+    @Override
+    public void handleFindUnapprovedCards(HttpExchange exchange) {
+        try {
+            handleFindCards(exchange, cardRepository.getUnapprovedCards());
+        } catch (IOException | SQLException e) {
+            e.printStackTrace();
+            ExceptionHandler.handleException(exchange, e);
+        }
+    }
+
+    @Override
+    public void handleActivateCard(HttpExchange exchange, String id) {
+        try {
+            cardRepository.activateCard(id);
+            responseHandler.handleSuccessfulResponse(exchange, 201);
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+            ExceptionHandler.handleException(exchange, e);
+        }
+    }
+
+    private void handleFindCards(HttpExchange exchange, List<Card> cards) throws IOException {
+        String respText = mapper.writeValueAsString(cards);
+        responseHandler.handleResponseWithJsonBody(exchange, respText, 200);
     }
 
 }

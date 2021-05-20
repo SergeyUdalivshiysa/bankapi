@@ -1,6 +1,7 @@
 package model.service.utils;
 
 import com.sun.net.httpserver.HttpExchange;
+
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -15,8 +16,13 @@ public class ResponseHandler {
         exchange.close();
     }
 
-    public void handleResponseWithNoBody(HttpExchange exchange, int code) throws IOException {
-        exchange.sendResponseHeaders(code, 0);
+    public void handleSuccessfulResponse(HttpExchange exchange, int code) throws IOException {
+        String json = "{\"success\": \"true\"}";
+        exchange.getResponseHeaders().add("content-type", "application/json");
+        exchange.sendResponseHeaders(code, json.length());
+        OutputStream output = exchange.getResponseBody();
+        output.write(json.getBytes());
+        output.flush();
         exchange.close();
     }
 }

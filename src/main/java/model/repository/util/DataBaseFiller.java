@@ -1,15 +1,17 @@
 package model.repository.util;
 
+import model.repository.Repository;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.sql.*;
+import java.sql.SQLException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class DataBaseFiller {
-    public static void fill() {
-        String path = "jdbc:h2:/Users/a19189114/IdeaProjects/bankapi/src/main/resources/db/test/testbd";
+public class DataBaseFiller implements Repository {
+
+    public void fill() {
         String sqlPath = "src/main/resources/init.sql";
         String content = "";
         try (Stream<String> lines = Files.lines(Paths.get(sqlPath))) {
@@ -17,11 +19,14 @@ public class DataBaseFiller {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        try (Connection connection = DriverManager.getConnection(path)) {
-            Statement statement = connection.createStatement();
-            statement.executeUpdate(content);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        try {
+            executeQuery(content, ps -> {
+                ps.executeUpdate();
+                return null;
+            });
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+
     }
 }

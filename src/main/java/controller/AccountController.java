@@ -1,7 +1,6 @@
 package controller;
 
 import com.sun.net.httpserver.HttpExchange;
-import framework.annotations.RequestMapping;
 
 public interface AccountController {
 
@@ -10,4 +9,6 @@ public interface AccountController {
       void getAll(HttpExchange exchange);
 
       void getBalance(HttpExchange exchange, String id);
+
+      void putAccount(HttpExchange exchange);
 }
