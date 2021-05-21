@@ -19,13 +19,6 @@ public class AccountControllerImpl extends AbstractControllerImpl implements Acc
     }
 
     @Override
-    @RequestMapping(path = "/", requestMethod = "GET")
-    public void getAll(HttpExchange exchange) {
-        accountService.handleFindAll(exchange);
-    }
-
-
-    @Override
     @RequestMapping(path = "/{id}/balance", requestMethod = "GET")
     public void getBalance(HttpExchange exchange, String id) {
         accountService.handleGetBalance(exchange, id);
@@ -33,7 +26,7 @@ public class AccountControllerImpl extends AbstractControllerImpl implements Acc
 
     @Override
     @RequestMapping(path = "/", requestMethod = "POST")
-    public void putAccount(HttpExchange exchange) {
+    public void addAccount(HttpExchange exchange) {
         accountService.handleAddAccount(exchange);
     }
 

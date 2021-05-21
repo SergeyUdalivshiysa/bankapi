@@ -1,7 +1,7 @@
 package model.repository;
 
+import model.dto.PaymentDTO;
 import model.entities.Payment;
-import model.repository.dto.PaymentDTO;
 
 import java.sql.SQLException;
 import java.util.List;

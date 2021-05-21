@@ -1,15 +1,22 @@
-package model.repository.dto;
+package model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class CounterpartyDTO {
-    int partyId;
-    int counterpartyId;
+@AllArgsConstructor
+public class AccountMoneyDTO {
+    int id;
+    BigDecimal amount;
 }
+
+
+
+
+

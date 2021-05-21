@@ -1,5 +1,6 @@
 package model.repository;
 
+import model.dto.CardDTO;
 import model.entities.Card;
 
 import java.sql.SQLException;
@@ -9,7 +10,7 @@ public interface CardRepository extends Repository {
 
     List<Card> getAllCards() throws SQLException;
 
-    void postCard(Card card) throws SQLException;
+    void addCard(CardDTO dto) throws SQLException;
 
     List<Card> getUnapprovedCards() throws SQLException;
 

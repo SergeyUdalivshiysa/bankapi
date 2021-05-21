@@ -19,12 +19,6 @@ public class CardControllerImplImpl extends AbstractControllerImpl implements Ca
     }
 
     @Override
-    @RequestMapping(path = "/test/{id}", requestMethod = "GET")
-    public void getCardById(HttpExchange exchange, String id) {
-        System.out.println(id);
-    }
-
-    @Override
     @RequestMapping(path = "/", requestMethod = "POST")
     public void createCard(HttpExchange exchange) {
         cardService.handleCreateCard(exchange);

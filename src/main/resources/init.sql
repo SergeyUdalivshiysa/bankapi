@@ -22,8 +22,8 @@ create table account
 create table card
 (
     id         INT PRIMARY KEY AUTO_INCREMENT,
-    number     varchar not null,
-    account_id int     not null,
+    number     bigint auto_increment (1000000000000000, 1) not null,
+    account_id int                                         not null,
     foreign key (account_id) references account (id),
     active     boolean
 );
@@ -54,11 +54,23 @@ values (1, 'Victor', false);
 insert into user (id, name, legal_entity)
 values (2, 'Vlad', false);
 
+insert into user (id, name, legal_entity)
+values (3, 'Kolya', false);
+
 insert into account (id, amount, user_id)
 values (1, '200.50', 1);
 
-insert into card (id, number, account_id, active)
-values (1, '1234324', 1, true);
+insert into account (id, amount, user_id)
+values (2, '2', 2);
 
-insert into card (id, number, account_id, active)
-values (2, '1234324', 1, false);
+insert into card (id, account_id, active)
+values (1, 1, true);
+
+insert into card (id, account_id, active)
+values (2, 1, false);
+
+insert into counterparty (party_id, counterparty_id)
+values (1, 2);
+
+insert into payment (amount, approved, sender_id, receiver_id)
+values (1, false, 2, 1)

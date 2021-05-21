@@ -1,5 +1,6 @@
 package model.repository.implementation;
 
+import model.dto.CardDTO;
 import model.entities.Card;
 import model.repository.CardRepository;
 
@@ -10,22 +11,21 @@ import java.util.List;
 
 public class CardRepositoryImpl implements CardRepository {
 
-    private final String getSql = "select * from card";
-    private final String getUnapprovedCardsSql = "select * from card where active = false";
-    private final String insertCardSql = "insert into card (number, account_id, active) values (?, (select id from account where id = ?), ?) ";
+    private final String getAllCardsSql = "select id, number, account_id, active from card";
+    private final String getUnapprovedCardsSql = "select id, number, account_id, active from card where active = false";
+    private final String insertCardSql = "insert into card (account_id, active) values ((select id from account where id = ?), ?) ";
     private final String activateCardSql = "update card set active = true where id = ?";
 
     @Override
     public List<Card> getAllCards() throws SQLException {
-        return getCards(getSql);
+        return getCards(getAllCardsSql);
     }
 
     @Override
-    public void postCard(Card card) throws SQLException {
+    public void addCard(CardDTO dto) throws SQLException {
         executeQuery(insertCardSql, statement -> {
-            statement.setString(1, card.getNumber());
-            statement.setInt(2, card.getAccount_id());
-            statement.setBoolean(3, card.isActive());
+            statement.setInt(1, dto.getAccountId());
+            statement.setBoolean(2, false);
             statement.executeUpdate();
             return null;
         });

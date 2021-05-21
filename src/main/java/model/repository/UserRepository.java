@@ -1,7 +1,7 @@
 package model.repository;
 
+import model.dto.CounterpartyDTO;
 import model.entities.User;
-import model.repository.dto.CounterpartyDTO;
 
 import java.sql.SQLException;
 import java.util.List;

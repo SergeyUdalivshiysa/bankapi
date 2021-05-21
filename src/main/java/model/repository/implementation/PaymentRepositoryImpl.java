@@ -1,9 +1,9 @@
 package model.repository.implementation;
 
 import exception.IncorrectInputDataException;
+import model.dto.PaymentDTO;
 import model.entities.Payment;
 import model.repository.PaymentRepository;
-import model.repository.dto.PaymentDTO;
 import util.PropertiesManager;
 
 import java.sql.*;
@@ -13,8 +13,8 @@ import java.util.List;
 public class PaymentRepositoryImpl implements PaymentRepository {
 
     private final String insertPaySql = "insert into payment (amount, approved, sender_id, receiver_id) values (?, false, ?, ?)";
-    private final String getUnapprovedPayments = "select * from payment where approved = false";
-    private final String approvePaymentSql = "update payment set approved = true where id = ?";
+    private final String getUnapprovedPayments = "select id, id, amount, approved, sender_id, receiver_id from payment where approved = false";
+    private final String approvePaymentSql = "update payment set approved = true where id = ? and approved = false";
     private final String getPaymentSql = "select amount, sender_id, receiver_id from payment where id = ?";
     private final String takeSenderMoneySql = "update account set amount = amount - ? where amount >= ? and id = ?";
     private final String giveMoneySql = "update account set amount = amount + ? where id = ?";
@@ -71,6 +71,7 @@ public class PaymentRepositoryImpl implements PaymentRepository {
         PreparedStatement getPaymentStatement = connection.prepareStatement(getPaymentSql);
         getPaymentStatement.setString(1, id);
         ResultSet resultSet = getPaymentStatement.executeQuery();
+        getPaymentStatement.close();
         if (!resultSet.next()) throw new IncorrectInputDataException("Incorrect input data");
         return new PaymentDTO(resultSet.getBigDecimal(1),
                 resultSet.getInt(2),
@@ -83,15 +84,16 @@ public class PaymentRepositoryImpl implements PaymentRepository {
         takeSenderMoneyStatement.setBigDecimal(2, paymentDTO.getAmount());
         takeSenderMoneyStatement.setInt(3, paymentDTO.getSenderId());
         int result = takeSenderMoneyStatement.executeUpdate();
+        takeSenderMoneyStatement.close();
         if (result < 1) throw new IncorrectInputDataException("Incorrect input data");
     }
 
     private void executeGivingMoney(Connection connection, PaymentDTO paymentDTO) throws SQLException {
-        System.out.println(3);
         PreparedStatement giveMoneyStatement = connection.prepareStatement(giveMoneySql);
         giveMoneyStatement.setBigDecimal(1, paymentDTO.getAmount());
         giveMoneyStatement.setInt(2, paymentDTO.getReceiverId());
         int result = giveMoneyStatement.executeUpdate();
+        giveMoneyStatement.close();
         if (result < 1) throw new IncorrectInputDataException("Incorrect input data");
     }
 
@@ -99,7 +101,7 @@ public class PaymentRepositoryImpl implements PaymentRepository {
         PreparedStatement setApproved = connection.prepareStatement(approvePaymentSql);
         setApproved.setString(1, id);
         int result = setApproved.executeUpdate();
-        System.out.println(result);
+        setApproved.close();
         if (result < 1) throw new IncorrectInputDataException("Incorrect input data");
     }
 

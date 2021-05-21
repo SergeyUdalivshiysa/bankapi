@@ -1,4 +1,4 @@
-package model.repository.dto;
+package model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,16 +7,12 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-public class AccountMoneyDTO {
-    int id;
+public class PaymentDTO {
     BigDecimal amount;
+    int senderId;
+    int receiverId;
 }
-
-
-
-
-

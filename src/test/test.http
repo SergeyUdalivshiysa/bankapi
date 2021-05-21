@@ -5,7 +5,7 @@ Accept: application/json
 ###
 
 //Потдтверить платеж
-PUT http://localhost:8080/payments/approve/66
+PUT http://localhost:8080/payments/approve/2
 Accept: application/json
 
 ###
@@ -13,7 +13,7 @@ Accept: application/json
 
 
 //Активировать карту
-PUT http://localhost:8080/cards/approve/3
+PUT http://localhost:8080/cards/approve/2
 Accept: application/json
 
 ###
@@ -41,8 +41,7 @@ POST http://localhost:8080/users
 Content-Type: application/json
 
 {
-  "name": "JEKA",
-  "legalEntity": "false"
+  "name": "Stas"
 }
 
 ###
@@ -54,7 +53,7 @@ POST http://localhost:8080/payments
 Content-Type: application/json
 
 {
-  "amount": 200.00,
+  "amount": "200.20",
   "senderId": 1,
   "receiverId": 2
 }
@@ -66,14 +65,14 @@ POST http://localhost:8080/users/counterparties
 Content-Type: application/json
 
 {
-  "partyId": 1,
-  "counterpartyId": 5
+  "partyId": 2,
+  "counterpartyId": 3
 }
 
 ###
 
 //Просмотр контрагентов
-GET http://localhost:8080/users/1/counterparties
+GET http://localhost:8080/users/3/counterparties
 Accept: application/json
 
 ###
@@ -85,8 +84,8 @@ PUT http://localhost:8080/accounts
 Content-Type: application/json
 
 {
-  "id": 1,
-  "amount": -12323
+  "id": "1",
+  "amount": "200"
 }
 
 ###
@@ -102,9 +101,7 @@ POST http://localhost:8080/cards/
 Content-Type: application/json
 
 {
-  "number": "LA TEST",
-  "account_id": 6,
-  "active": false
+  "accountId": 1
 }
 
 ###

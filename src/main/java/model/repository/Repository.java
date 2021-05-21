@@ -9,8 +9,8 @@ import java.sql.SQLException;
 
 public interface Repository {
     default <R> R executeQuery(String query, Executor<R> executor) throws SQLException {
-        try (Connection connection = DriverManager.getConnection(PropertiesManager.URL)) {
-            PreparedStatement ps = connection.prepareStatement(query);
+        try (Connection connection = DriverManager.getConnection(PropertiesManager.URL);
+             PreparedStatement ps = connection.prepareStatement(query)) {
             return executor.apply(ps);
         }
     }

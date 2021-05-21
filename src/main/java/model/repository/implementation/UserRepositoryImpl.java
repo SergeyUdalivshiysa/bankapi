@@ -1,9 +1,9 @@
 package model.repository.implementation;
 
 import exception.IncorrectInputDataException;
+import model.dto.CounterpartyDTO;
 import model.entities.User;
 import model.repository.UserRepository;
-import model.repository.dto.CounterpartyDTO;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,7 +12,7 @@ import java.util.List;
 
 public class UserRepositoryImpl implements UserRepository {
 
-    private final String getCounterpartiesSql = "select * from user u join counterparty c on u.id = c.counterparty_id where c.party_id = ?";
+    private final String getCounterpartiesSql = "select id, name, legal_entity from user u join counterparty c on u.id = c.counterparty_id where c.party_id = ?";
     private final String insertUserSql = "insert into user (name, legal_entity) values (?, ?)";
     private final String addCounterpartySql = "insert into counterparty (party_id, counterparty_id) values (?, ?)";
 

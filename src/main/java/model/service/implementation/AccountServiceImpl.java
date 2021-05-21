@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import exception.IncorrectInputDataException;
 import exception.handler.ExceptionHandler;
+import model.dto.AccountDTO;
+import model.dto.AccountMoneyDTO;
 import model.repository.AccountRepository;
-import model.repository.dto.AccountDTO;
-import model.repository.dto.AccountMoneyDTO;
 import model.repository.implementation.AccountRepositoryImpl;
 import model.service.AccountService;
 import model.service.utils.ResponseHandler;
@@ -30,17 +30,6 @@ public class AccountServiceImpl implements AccountService {
                 throw new IncorrectInputDataException("Incorrect input data");
             accountRepository.update(dto);
             responseHandler.handleSuccessfulResponse(exchange, 200);
-        } catch (IOException | SQLException e) {
-            e.printStackTrace();
-            ExceptionHandler.handleException(exchange, e);
-        }
-    }
-
-    @Override
-    public void handleFindAll(HttpExchange exchange) {
-        try {
-            String respText = mapper.writeValueAsString(accountRepository.getAllAccounts());
-            responseHandler.handleResponseWithJsonBody(exchange, respText, 200);
         } catch (IOException | SQLException e) {
             e.printStackTrace();
             ExceptionHandler.handleException(exchange, e);

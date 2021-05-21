@@ -3,6 +3,7 @@ package model.service.implementation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
 import exception.handler.ExceptionHandler;
+import model.dto.CardDTO;
 import model.entities.Card;
 import model.repository.CardRepository;
 import model.repository.implementation.CardRepositoryImpl;
@@ -31,8 +32,8 @@ public class CardServiceImpl implements CardService {
     @Override
     public void handleCreateCard(HttpExchange exchange) {
         try {
-            Card card = mapper.readValue(exchange.getRequestBody(), Card.class);
-            cardRepository.postCard(card);
+            CardDTO dto = mapper.readValue(exchange.getRequestBody(), CardDTO.class);
+            cardRepository.addCard(dto);
             responseHandler.handleSuccessfulResponse(exchange, 201);
         } catch (Exception e) {
             e.printStackTrace();
@@ -54,7 +55,7 @@ public class CardServiceImpl implements CardService {
     public void handleActivateCard(HttpExchange exchange, String id) {
         try {
             cardRepository.activateCard(id);
-            responseHandler.handleSuccessfulResponse(exchange, 201);
+            responseHandler.handleSuccessfulResponse(exchange, 200);
         } catch (SQLException | IOException e) {
             e.printStackTrace();
             ExceptionHandler.handleException(exchange, e);

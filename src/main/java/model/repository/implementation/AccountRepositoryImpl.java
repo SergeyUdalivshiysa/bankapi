@@ -1,20 +1,17 @@
 package model.repository.implementation;
 
 import exception.IncorrectInputDataException;
+import model.dto.AccountDTO;
+import model.dto.AccountMoneyDTO;
 import model.entities.Account;
 import model.repository.AccountRepository;
-import model.repository.dto.AccountDTO;
-import model.repository.dto.AccountMoneyDTO;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class AccountRepositoryImpl implements AccountRepository {
 
     private final String addMoneySql = "update account set amount = amount + ? where id = ?;";
-    private final String findAllSql = "select * from account";
     private final String getBalanceSql = "select amount from account where id = ?";
     private final String addAccountSql = "insert into account (user_id) values (?)";
 
@@ -27,18 +24,6 @@ public class AccountRepositoryImpl implements AccountRepository {
             int result = statement.executeUpdate();
             if (result < 1) throwNoSuchAccExc(String.valueOf(dto.getId()));
             return null;
-        });
-    }
-
-    @Override
-    public List<Account> getAllAccounts() throws SQLException {
-        return executeQuery(findAllSql, statement -> {
-            List<Account> accounts = new ArrayList<>();
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                accounts.add(buildAccount(resultSet));
-            }
-            return accounts;
         });
     }
 
