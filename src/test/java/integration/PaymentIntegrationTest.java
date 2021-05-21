@@ -1,4 +1,4 @@
-package controller.implementation;
+package integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -7,6 +7,7 @@ import model.repository.util.DataBaseFiller;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -29,11 +30,12 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class PaymentControllerImplTest {
+class PaymentIntegrationTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final DataBaseFiller dataBaseFiller = new DataBaseFiller();
     private final String getLastCreatedPayment = "select sender_id from payment order by id desc limit 1";
+    private final String getMoneyAmountSql = "select amount from account where id = ?";
 
 
     @BeforeEach
@@ -57,7 +59,6 @@ class PaymentControllerImplTest {
             httpPost.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
             CloseableHttpResponse response = httpClient.execute(httpPost);
             assertEquals(201, response.getStatusLine().getStatusCode());
-
             Connection connection = DriverManager.getConnection(PropertiesManager.URL);
             PreparedStatement preparedStatement = connection.prepareStatement(getLastCreatedPayment);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -73,6 +74,26 @@ class PaymentControllerImplTest {
 
     @Test
     void approvePayment() {
+        try {
+            BigDecimal amount = BigDecimal.valueOf(1.00);
+            int senderId = 2;
+            int receiver_id = 1;
+            CloseableHttpClient httpClient = HttpClients.createDefault();
+            HttpPut httpPut = new HttpPut("http://localhost:8080/payments/approve/1");
+            CloseableHttpResponse response = httpClient.execute(httpPut);
+            assertEquals(200, response.getStatusLine().getStatusCode());
+
+            Connection connection = DriverManager.getConnection(PropertiesManager.URL);
+            PreparedStatement preparedStatement = connection.prepareStatement("");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            BigDecimal actual = null;
+            if (resultSet.next()) actual = resultSet.getBigDecimal(1);
+            preparedStatement.close();
+            connection.close();
+            assertEquals(new BigDecimal("400.50"), actual);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -83,10 +104,9 @@ class PaymentControllerImplTest {
             CloseableHttpResponse response = httpClient.execute(httpGet);
             assertEquals(200, response.getStatusLine().getStatusCode());
             List<Payment> payments = new ArrayList<>();
-            Payment payment = new Payment(1, new BigDecimal("1"), 2, 1);
-
-
-            String expected = objectMapper.writeValueAsString(cardList);
+            Payment payment = new Payment(1, new BigDecimal("1.00"), false, 2, 1);
+            payments.add(payment);
+            String expected = objectMapper.writeValueAsString(payments);
             String actual = new BufferedReader(
                     new InputStreamReader(
                             response.getEntity().getContent(),

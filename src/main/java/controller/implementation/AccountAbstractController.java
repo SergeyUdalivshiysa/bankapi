@@ -1,16 +1,19 @@
 package controller.implementation;
 
 import com.sun.net.httpserver.HttpExchange;
-import controller.AccountController;
 import framework.annotations.Controller;
 import framework.annotations.RequestMapping;
 import model.service.AccountService;
 import model.service.implementation.AccountServiceImpl;
 
 @Controller(path = "/accounts")
-public class AccountControllerImpl extends AbstractControllerImpl implements AccountController {
+public class AccountAbstractController extends AbstractController implements controller.AccountController {
 
-    private final AccountService accountService = new AccountServiceImpl();
+    private final AccountService accountService;
+
+    public AccountAbstractController() {
+        accountService = new AccountServiceImpl();
+    }
 
     @Override
     @RequestMapping(path = "/", requestMethod = "PUT")

@@ -1,6 +1,5 @@
 package controller;
 
-public interface AbstractController {
-
+public interface ControllerInterface {
     void initialize();
 }

@@ -16,9 +16,15 @@ import java.util.List;
 
 public class CardServiceImpl implements CardService {
 
-    private final CardRepository cardRepository = new CardRepositoryImpl();
-    private final ObjectMapper mapper = new ObjectMapper();
-    private final ResponseHandler responseHandler = new ResponseHandler();
+    private final CardRepository cardRepository;
+    private final ObjectMapper mapper;
+    private final ResponseHandler responseHandler;
+
+    public CardServiceImpl() {
+        cardRepository = new CardRepositoryImpl();
+        mapper = new ObjectMapper();
+        responseHandler = new ResponseHandler();
+    }
 
     public void handleFindAll(HttpExchange exchange) {
         try {

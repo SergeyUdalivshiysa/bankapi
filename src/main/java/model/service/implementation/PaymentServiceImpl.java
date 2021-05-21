@@ -16,9 +16,16 @@ import java.sql.SQLException;
 
 public class PaymentServiceImpl implements PaymentService {
 
-    private final PaymentRepository paymentRepository = new PaymentRepositoryImpl();
-    private final ObjectMapper mapper = new ObjectMapper();
-    private final ResponseHandler responseHandler = new ResponseHandler();
+
+    private final PaymentRepository paymentRepository;
+    private final ObjectMapper mapper;
+    private final ResponseHandler responseHandler;
+
+    public PaymentServiceImpl() {
+        paymentRepository = new PaymentRepositoryImpl();
+        mapper = new ObjectMapper();
+        responseHandler = new ResponseHandler();
+    }
 
     public void handleCreatePayment(HttpExchange exchange) {
         try {

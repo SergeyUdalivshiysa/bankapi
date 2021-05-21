@@ -15,9 +15,15 @@ import java.sql.SQLException;
 
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository = new UserRepositoryImpl();
-    private final ObjectMapper mapper = new ObjectMapper();
-    private final ResponseHandler responseHandler = new ResponseHandler();
+    private final UserRepository userRepository;
+    private final ObjectMapper mapper;
+    private final ResponseHandler responseHandler;
+
+    public UserServiceImpl() {
+        userRepository = new UserRepositoryImpl();
+        mapper = new ObjectMapper();
+        responseHandler = new ResponseHandler();
+    }
 
     public void handleFindCounterpartiesByUserId(HttpExchange exchange, String id) {
         try {

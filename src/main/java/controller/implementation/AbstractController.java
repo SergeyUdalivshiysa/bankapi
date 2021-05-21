@@ -1,7 +1,6 @@
 package controller.implementation;
 
 import com.sun.net.httpserver.HttpExchange;
-import controller.AbstractController;
 import framework.annotations.Controller;
 import framework.annotations.RequestMapping;
 import framework.web.Server;
@@ -15,7 +14,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-abstract public class AbstractControllerImpl implements AbstractController {
+abstract public class AbstractController implements controller.ControllerInterface {
 
     protected Set<Method> methodSet = Arrays.stream(this.getClass().getMethods())
             .filter(method -> method.isAnnotationPresent(RequestMapping.class))

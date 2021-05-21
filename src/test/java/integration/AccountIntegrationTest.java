@@ -1,4 +1,4 @@
-package controller.implementation;
+package integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -23,9 +23,9 @@ import java.sql.ResultSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class AccountControllerImplTest {
+class AccountIntegrationTest {
 
-    private final String getMoneyAmountSql = "select amount from account where id = 1";
+    private final String getMoneyAmountSql = "select amount from account where id = ?";
     private final String getLastCreatedAccount = "select user_id from account order by id desc limit 1";
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final DataBaseFiller dataBaseFiller = new DataBaseFiller();
@@ -38,9 +38,10 @@ class AccountControllerImplTest {
     @Test
     void updateAmount() {
         try {
+            int id = 1;
             CloseableHttpClient httpClient = HttpClients.createDefault();
             ObjectNode objectNode = objectMapper.createObjectNode();
-            objectNode.put("id", "1");
+            objectNode.put("id", 1);
             objectNode.put("amount", "200");
             String json = objectMapper.writeValueAsString(objectNode);
             HttpPut httpPut = new HttpPut("http://localhost:8080/accounts");
@@ -49,6 +50,7 @@ class AccountControllerImplTest {
             assertEquals(200, response.getStatusLine().getStatusCode());
             Connection connection = DriverManager.getConnection(PropertiesManager.URL);
             PreparedStatement preparedStatement = connection.prepareStatement(getMoneyAmountSql);
+            preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             BigDecimal actual = null;
             if (resultSet.next()) actual = resultSet.getBigDecimal(1);

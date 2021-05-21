@@ -18,9 +18,15 @@ import java.sql.SQLException;
 
 public class AccountServiceImpl implements AccountService {
 
-    private final AccountRepository accountRepository = new AccountRepositoryImpl();
-    private final ObjectMapper mapper = new ObjectMapper();
-    private final ResponseHandler responseHandler = new ResponseHandler();
+    private final AccountRepository accountRepository;
+    private final ObjectMapper mapper;
+    private final ResponseHandler responseHandler;
+
+    public AccountServiceImpl() {
+        accountRepository = new AccountRepositoryImpl();
+        mapper = new ObjectMapper();
+        responseHandler = new ResponseHandler();
+    }
 
     @Override
     public void handleUpdateAmount(HttpExchange exchange) {

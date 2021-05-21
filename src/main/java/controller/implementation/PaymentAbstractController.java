@@ -1,16 +1,19 @@
 package controller.implementation;
 
 import com.sun.net.httpserver.HttpExchange;
-import controller.PaymentController;
 import framework.annotations.Controller;
 import framework.annotations.RequestMapping;
 import model.service.PaymentService;
 import model.service.implementation.PaymentServiceImpl;
 
 @Controller(path = "/payments")
-public class PaymentControllerImpl extends AbstractControllerImpl implements PaymentController {
+public class PaymentAbstractController extends AbstractController implements controller.PaymentController {
 
-    private final PaymentService paymentService = new PaymentServiceImpl();
+    private final PaymentService paymentService;
+
+    public PaymentAbstractController() {
+        paymentService = new PaymentServiceImpl();
+    }
 
     @Override
     @RequestMapping(path = "/", requestMethod = "POST")

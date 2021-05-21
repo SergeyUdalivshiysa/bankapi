@@ -13,9 +13,9 @@ import java.util.List;
 public class PaymentRepositoryImpl implements PaymentRepository {
 
     private final String insertPaySql = "insert into payment (amount, approved, sender_id, receiver_id) values (?, false, ?, ?)";
-    private final String getUnapprovedPayments = "select id, id, amount, approved, sender_id, receiver_id from payment where approved = false";
-    private final String approvePaymentSql = "update payment set approved = true where id = ? and approved = false";
-    private final String getPaymentSql = "select amount, sender_id, receiver_id from payment where id = ?";
+    private final String getUnapprovedPayments = "select id, amount, approved, sender_id, receiver_id from payment where approved = false";
+    private final String approvePaymentSql = "update payment set approved = true where id = ?";
+    private final String getPaymentSql = "select amount, sender_id, receiver_id from payment where id = ? and approved = false";
     private final String takeSenderMoneySql = "update account set amount = amount - ? where amount >= ? and id = ?";
     private final String giveMoneySql = "update account set amount = amount + ? where id = ?";
 
@@ -69,13 +69,14 @@ public class PaymentRepositoryImpl implements PaymentRepository {
 
     private PaymentDTO createPaymentDTO(Connection connection, String id) throws SQLException {
         PreparedStatement getPaymentStatement = connection.prepareStatement(getPaymentSql);
+        System.out.println(id);
         getPaymentStatement.setString(1, id);
         ResultSet resultSet = getPaymentStatement.executeQuery();
-        getPaymentStatement.close();
         if (!resultSet.next()) throw new IncorrectInputDataException("Incorrect input data");
-        return new PaymentDTO(resultSet.getBigDecimal(1),
+        PaymentDTO dto = new PaymentDTO(resultSet.getBigDecimal(1),
                 resultSet.getInt(2),
                 resultSet.getInt(3));
+        return dto;
     }
 
     private void executeTakingMoney(Connection connection, PaymentDTO paymentDTO) throws SQLException {

@@ -8,9 +8,13 @@ import model.service.CardService;
 import model.service.implementation.CardServiceImpl;
 
 @Controller(path = "/cards")
-public class CardControllerImplImpl extends AbstractControllerImpl implements CardController {
+public class CardAbstractControllerImpl extends AbstractController implements CardController {
 
-    private final CardService cardService = new CardServiceImpl();
+    private final CardService cardService;
+
+    public CardAbstractControllerImpl() {
+        cardService = new CardServiceImpl();
+    }
 
     @Override
     @RequestMapping(path = "/", requestMethod = "GET")

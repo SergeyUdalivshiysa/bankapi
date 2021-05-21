@@ -1,16 +1,19 @@
 package controller.implementation;
 
 import com.sun.net.httpserver.HttpExchange;
-import controller.UserController;
 import framework.annotations.Controller;
 import framework.annotations.RequestMapping;
 import model.service.UserService;
 import model.service.implementation.UserServiceImpl;
 
 @Controller(path = "/users")
-public class UserControllerImpl extends AbstractControllerImpl implements UserController {
+public class UserAbstractController extends AbstractController implements controller.UserController {
 
-    private final UserService userService = new UserServiceImpl();
+    private final UserService userService;
+
+    public UserAbstractController() {
+        userService = new UserServiceImpl();
+    }
 
     @Override
     @RequestMapping(path = "/{id}/counterparties", requestMethod = "GET")
