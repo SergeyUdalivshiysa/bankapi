@@ -4,7 +4,7 @@ import com.sun.net.httpserver.HttpExchange;
 
 public interface CardController {
 
-    void findAll(HttpExchange exchange);
+    void findCardsByAccountId(HttpExchange exchange, String id);
 
     void createCard(HttpExchange exchange);
 

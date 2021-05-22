@@ -7,11 +7,11 @@ import model.service.PaymentService;
 import model.service.implementation.PaymentServiceImpl;
 
 @Controller(path = "/payments")
-public class PaymentAbstractController extends AbstractController implements controller.PaymentController {
+public class PaymentControllerImpl extends AbstractController implements controller.PaymentController {
 
     private final PaymentService paymentService;
 
-    public PaymentAbstractController() {
+    public PaymentControllerImpl() {
         paymentService = new PaymentServiceImpl();
     }
 

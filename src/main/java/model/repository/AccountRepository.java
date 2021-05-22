@@ -9,7 +9,7 @@ public interface AccountRepository extends Repository {
 
     void update(AccountMoneyDTO dto) throws SQLException;
 
-    AccountMoneyDTO getBalance(String id) throws SQLException;
+    AccountMoneyDTO getBalance(int id) throws SQLException;
 
     void addAccount(AccountDTO accountDTO) throws SQLException;
 }

@@ -26,9 +26,10 @@ public class CardServiceImpl implements CardService {
         responseHandler = new ResponseHandler();
     }
 
-    public void handleFindAll(HttpExchange exchange) {
+    public void handleFindCardsByAccountId(HttpExchange exchange, String id) {
         try {
-            handleFindCards(exchange, cardRepository.getAllCards());
+            int accountId = Integer.parseInt(id);
+            handleFindCards(exchange, cardRepository.getCardsByAccountId(accountId));
         } catch (IOException | SQLException e) {
             e.printStackTrace();
             ExceptionHandler.handleException(exchange, e);
@@ -60,7 +61,8 @@ public class CardServiceImpl implements CardService {
     @Override
     public void handleActivateCard(HttpExchange exchange, String id) {
         try {
-            cardRepository.activateCard(id);
+            int accountId = Integer.parseInt(id);
+            cardRepository.activateCard(accountId);
             responseHandler.handleSuccessfulResponse(exchange, 200);
         } catch (SQLException | IOException e) {
             e.printStackTrace();

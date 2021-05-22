@@ -31,7 +31,7 @@ POST http://localhost:8080/accounts
 Content-Type: application/json
 
 {
-  "userId": 2
+  "userId": 1
 }
 
 ###
@@ -72,7 +72,7 @@ Content-Type: application/json
 ###
 
 //Просмотр контрагентов
-GET http://localhost:8080/users/3/counterparties
+GET http://localhost:8080/users/1/counterparties
 Accept: application/json
 
 ###
@@ -91,7 +91,7 @@ Content-Type: application/json
 ###
 
 //Проверка баланса
-GET http://localhost:8080/accounts/3/balance
+GET http://localhost:8080/accounts/1/balance
 Accept: application/json
 
 
@@ -106,8 +106,8 @@ Content-Type: application/json
 
 ###
 
-//Список карт
-GET http://localhost:8080/cards
+//Список карт по аккаунту
+GET http://localhost:8080/cards/9
 Accept: application/json
 
 

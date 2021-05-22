@@ -14,8 +14,9 @@ create table user
 create table account
 (
     id      INT PRIMARY KEY AUTO_INCREMENT,
+    number  bigint auto_increment (1000000000000000, 1) not null,
     amount  decimal(20, 2) default 0.00,
-    user_id int not null,
+    user_id int                                         not null,
     foreign key (user_id) references user (id)
 );
 
@@ -32,7 +33,7 @@ create table payment
 (
     id          INT PRIMARY KEY AUTO_INCREMENT,
     amount      decimal(20, 2) default 0.00,
-    approved    boolean,
+    approved    boolean        default false,
     sender_id   int not null,
     receiver_id int not null,
     foreign key (sender_id) references account (id),
@@ -73,4 +74,7 @@ insert into counterparty (party_id, counterparty_id)
 values (1, 2);
 
 insert into payment (amount, approved, sender_id, receiver_id)
-values (1, false, 2, 1)
+values (1, false, 2, 1);
+
+insert into payment (amount, approved, sender_id, receiver_id)
+values (100, true, 2, 1)

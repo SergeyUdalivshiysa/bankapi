@@ -7,11 +7,11 @@ import model.service.UserService;
 import model.service.implementation.UserServiceImpl;
 
 @Controller(path = "/users")
-public class UserAbstractController extends AbstractController implements controller.UserController {
+public class UserControllerImpl extends AbstractController implements controller.UserController {
 
     private final UserService userService;
 
-    public UserAbstractController() {
+    public UserControllerImpl() {
         userService = new UserServiceImpl();
     }
 

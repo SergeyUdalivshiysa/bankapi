@@ -8,13 +8,13 @@ import java.util.List;
 
 public interface CardRepository extends Repository {
 
-    List<Card> getAllCards() throws SQLException;
+    List<Card> getCardsByAccountId(int id) throws SQLException;
 
     void addCard(CardDTO dto) throws SQLException;
 
     List<Card> getUnapprovedCards() throws SQLException;
 
-    void activateCard(String id) throws SQLException;
+    void activateCard(int id) throws SQLException;
 }
 
 

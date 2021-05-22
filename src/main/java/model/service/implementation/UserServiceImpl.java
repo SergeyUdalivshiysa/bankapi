@@ -27,7 +27,8 @@ public class UserServiceImpl implements UserService {
 
     public void handleFindCounterpartiesByUserId(HttpExchange exchange, String id) {
         try {
-            String respText = mapper.writeValueAsString(userRepository.findCounterpartiesById(id));
+            int userId = Integer.parseInt(id);
+            String respText = mapper.writeValueAsString(userRepository.findCounterpartiesById(userId));
             responseHandler.handleResponseWithJsonBody(exchange, respText, 200);
         } catch (IOException | SQLException e) {
             e.printStackTrace();

@@ -16,7 +16,7 @@ PUT /accounts - внесение средств
 
 
 Карта
-GET /cards - список карт
+GET /cards/{id} - список карт по id аккаунта
 
 POST /cards - новая карта
 {

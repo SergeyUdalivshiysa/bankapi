@@ -3,7 +3,7 @@ package model.service;
 import com.sun.net.httpserver.HttpExchange;
 
 public interface CardService {
-    void handleFindAll(HttpExchange exchange);
+    void handleFindCardsByAccountId(HttpExchange exchange, String id);
 
     void handleCreateCard(HttpExchange exchange);
 

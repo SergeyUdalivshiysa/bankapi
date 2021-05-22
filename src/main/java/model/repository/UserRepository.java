@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface UserRepository extends Repository {
 
-    List<User> findCounterpartiesById(String id) throws SQLException;
+    List<User> findCounterpartiesById(int id) throws SQLException;
 
     void addUser(User user) throws SQLException;
 

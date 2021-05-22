@@ -45,7 +45,8 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void handleGetBalance(HttpExchange exchange, String id) {
         try {
-            String respText = mapper.writeValueAsString(accountRepository.getBalance(id));
+            int accountId = Integer.parseInt(id);
+            String respText = mapper.writeValueAsString(accountRepository.getBalance(accountId));
             responseHandler.handleResponseWithJsonBody(exchange, respText, 200);
         } catch (IOException | SQLException e) {
             e.printStackTrace();

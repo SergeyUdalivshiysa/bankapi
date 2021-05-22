@@ -7,11 +7,11 @@ import model.service.AccountService;
 import model.service.implementation.AccountServiceImpl;
 
 @Controller(path = "/accounts")
-public class AccountAbstractController extends AbstractController implements controller.AccountController {
+public class AccountControllerImpl extends AbstractController implements controller.AccountController {
 
     private final AccountService accountService;
 
-    public AccountAbstractController() {
+    public AccountControllerImpl() {
         accountService = new AccountServiceImpl();
     }
 

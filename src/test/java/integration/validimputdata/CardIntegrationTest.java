@@ -1,4 +1,4 @@
-package integration;
+package integration.validimputdata;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -19,21 +19,19 @@ import util.PropertiesManager;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CardIntegrationTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final DataBaseFiller dataBaseFiller = new DataBaseFiller();
-    private final String getLastCreatedCard = "select account_id from card order by id desc limit 1";
+    private final String getLastCreatedCard = "select id, number, account_id, active from card order by id desc limit 1";
     private final String getIsApproved = "select active from card where id = ?";
 
     @BeforeEach
@@ -42,10 +40,10 @@ class CardIntegrationTest {
     }
 
     @Test
-    void findAll() {
+    void getCardsByAccountId() {
         try {
             CloseableHttpClient httpClient = HttpClients.createDefault();
-            HttpGet httpGet = new HttpGet("http://localhost:8080/cards");
+            HttpGet httpGet = new HttpGet("http://localhost:8080/cards/1");
             CloseableHttpResponse response = httpClient.execute(httpGet);
             assertEquals(200, response.getStatusLine().getStatusCode());
             Card card1 = new Card(1, "1000000000000000", 1, true);
@@ -60,7 +58,6 @@ class CardIntegrationTest {
                             StandardCharsets.UTF_8))
                     .lines()
                     .collect(Collectors.joining("\n"));
-            ;
             assertEquals(expected, actual);
         } catch (Exception e) {
             e.printStackTrace();
@@ -82,14 +79,23 @@ class CardIntegrationTest {
             Connection connection = DriverManager.getConnection(PropertiesManager.URL);
             PreparedStatement preparedStatement = connection.prepareStatement(getLastCreatedCard);
             ResultSet resultSet = preparedStatement.executeQuery();
-            int actual = 0;
-            if (resultSet.next()) actual = resultSet.getInt(1);
+            Card actualCard = null;
+            if (resultSet.next()) actualCard = buildCard(resultSet);
             preparedStatement.close();
             connection.close();
-            assertEquals(2, actual);
+            Card expectedCard = new Card(3, "1000000000000002", 2, false);
+            assertEquals(expectedCard, actualCard);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private Card buildCard(ResultSet resultSet) throws SQLException {
+        return new Card(
+                resultSet.getInt(1),
+                resultSet.getString(2),
+                resultSet.getInt(3),
+                resultSet.getBoolean(4));
     }
 
     @Test
@@ -109,7 +115,6 @@ class CardIntegrationTest {
                             StandardCharsets.UTF_8))
                     .lines()
                     .collect(Collectors.joining("\n"));
-            ;
             assertEquals(expected, actual);
         } catch (Exception e) {
             e.printStackTrace();
@@ -132,9 +137,10 @@ class CardIntegrationTest {
             if (resultSet.next()) actual = resultSet.getBoolean(1);
             preparedStatement.close();
             connection.close();
-            assertEquals(true, actual);
+            assertTrue(actual);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 }

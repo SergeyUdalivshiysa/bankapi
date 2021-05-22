@@ -43,7 +43,8 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public void handleApprovePayment(HttpExchange exchange, String id) {
         try {
-            paymentRepository.approvePayment(id);
+            int paymentId = Integer.parseInt(id);
+            paymentRepository.approvePayment(paymentId);
             responseHandler.handleSuccessfulResponse(exchange, 200);
         } catch (SQLException | IOException e) {
             e.printStackTrace();

@@ -12,5 +12,5 @@ public interface PaymentRepository extends Repository {
 
     List<Payment> getUnapprovedPayments() throws SQLException;
 
-    void approvePayment(String id) throws SQLException;
+    void approvePayment(int id) throws SQLException;
 }

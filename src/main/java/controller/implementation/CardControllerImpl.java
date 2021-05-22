@@ -8,18 +8,18 @@ import model.service.CardService;
 import model.service.implementation.CardServiceImpl;
 
 @Controller(path = "/cards")
-public class CardAbstractControllerImpl extends AbstractController implements CardController {
+public class CardControllerImpl extends AbstractController implements CardController {
 
     private final CardService cardService;
 
-    public CardAbstractControllerImpl() {
+    public CardControllerImpl() {
         cardService = new CardServiceImpl();
     }
 
     @Override
-    @RequestMapping(path = "/", requestMethod = "GET")
-    public void findAll(HttpExchange exchange) {
-        cardService.handleFindAll(exchange);
+    @RequestMapping(path = "/{id}", requestMethod = "GET")
+    public void findCardsByAccountId(HttpExchange exchange, String id) {
+        cardService.handleFindCardsByAccountId(exchange, id);
     }
 
     @Override

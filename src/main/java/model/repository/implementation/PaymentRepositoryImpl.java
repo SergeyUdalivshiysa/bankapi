@@ -25,6 +25,8 @@ public class PaymentRepositoryImpl implements PaymentRepository {
             statement.setBigDecimal(1, paymentDTO.getAmount());
             statement.setInt(2, paymentDTO.getSenderId());
             statement.setInt(3, paymentDTO.getReceiverId());
+            if (paymentDTO.getSenderId() == paymentDTO.getReceiverId())
+                throw new SQLDataException("Incorrect input data");
             int result = statement.executeUpdate();
             if (result < 1) throw new SQLDataException("Incorrect input data");
             return null;
@@ -44,7 +46,7 @@ public class PaymentRepositoryImpl implements PaymentRepository {
     }
 
     @Override
-    public void approvePayment(String id) throws SQLException {
+    public void approvePayment(int id) throws SQLException {
         Connection connection = null;
         try {
             connection = DriverManager.getConnection(PropertiesManager.URL);
@@ -67,16 +69,15 @@ public class PaymentRepositoryImpl implements PaymentRepository {
         }
     }
 
-    private PaymentDTO createPaymentDTO(Connection connection, String id) throws SQLException {
+    private PaymentDTO createPaymentDTO(Connection connection, int id) throws SQLException {
         PreparedStatement getPaymentStatement = connection.prepareStatement(getPaymentSql);
         System.out.println(id);
-        getPaymentStatement.setString(1, id);
+        getPaymentStatement.setInt(1, id);
         ResultSet resultSet = getPaymentStatement.executeQuery();
         if (!resultSet.next()) throw new IncorrectInputDataException("Incorrect input data");
-        PaymentDTO dto = new PaymentDTO(resultSet.getBigDecimal(1),
+        return new PaymentDTO(resultSet.getBigDecimal(1),
                 resultSet.getInt(2),
                 resultSet.getInt(3));
-        return dto;
     }
 
     private void executeTakingMoney(Connection connection, PaymentDTO paymentDTO) throws SQLException {
@@ -98,9 +99,9 @@ public class PaymentRepositoryImpl implements PaymentRepository {
         if (result < 1) throw new IncorrectInputDataException("Incorrect input data");
     }
 
-    private void setApproved(Connection connection, String id) throws SQLException {
+    private void setApproved(Connection connection, int id) throws SQLException {
         PreparedStatement setApproved = connection.prepareStatement(approvePaymentSql);
-        setApproved.setString(1, id);
+        setApproved.setInt(1, id);
         int result = setApproved.executeUpdate();
         setApproved.close();
         if (result < 1) throw new IncorrectInputDataException("Incorrect input data");

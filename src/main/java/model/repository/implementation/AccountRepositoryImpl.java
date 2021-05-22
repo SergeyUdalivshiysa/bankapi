@@ -1,9 +1,9 @@
 package model.repository.implementation;
 
 import exception.IncorrectInputDataException;
+import exception.NotFoundException;
 import model.dto.AccountDTO;
 import model.dto.AccountMoneyDTO;
-import model.entities.Account;
 import model.repository.AccountRepository;
 
 import java.sql.ResultSet;
@@ -22,18 +22,18 @@ public class AccountRepositoryImpl implements AccountRepository {
             statement.setBigDecimal(1, dto.getAmount());
             statement.setInt(2, dto.getId());
             int result = statement.executeUpdate();
-            if (result < 1) throwNoSuchAccExc(String.valueOf(dto.getId()));
+            if (result < 1) throw new IncorrectInputDataException("Incorrect input data");
             return null;
         });
     }
 
     @Override
-    public AccountMoneyDTO getBalance(String id) throws SQLException {
+    public AccountMoneyDTO getBalance(int id) throws SQLException {
         return executeQuery(getBalanceSql, statement -> {
-            statement.setInt(1, Integer.parseInt(id));
+            statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
-            if (!resultSet.next()) throwNoSuchAccExc(id);
-            return new AccountMoneyDTO(Integer.parseInt(id), resultSet.getBigDecimal(1));
+            if (!resultSet.next()) throw new NotFoundException("No such account");
+            return new AccountMoneyDTO(id, resultSet.getBigDecimal(1));
         });
     }
 
@@ -44,18 +44,5 @@ public class AccountRepositoryImpl implements AccountRepository {
             statement.executeUpdate();
             return null;
         });
-    }
-
-
-    private Account buildAccount(ResultSet resultSet) throws SQLException {
-        return new Account(
-                resultSet.getInt(1),
-                resultSet.getBigDecimal(2),
-                resultSet.getInt(3)
-        );
-    }
-
-    private void throwNoSuchAccExc(String id) throws IncorrectInputDataException {
-        throw new IncorrectInputDataException("Incorrect input data");
     }
 }
