@@ -14,6 +14,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import util.PropertiesManager;
+import utils.HttpClientCreator;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -53,6 +54,8 @@ class UserIntegrationTest {
                             StandardCharsets.UTF_8))
                     .lines()
                     .collect(Collectors.joining("\n"));
+            response.close();
+            httpClient.close();
             assertEquals(expected, actual);
         } catch (Exception e) {
             e.printStackTrace();
@@ -79,6 +82,10 @@ class UserIntegrationTest {
             ResultSet resultSet = preparedStatement.executeQuery();
             User actualUser = null;
             if (resultSet.next()) actualUser = buildUser(resultSet);
+            preparedStatement.close();
+            connection.close();
+            httpClient.close();
+            response.close();
             User expectedUser = new User(2, "Vlad", false);
             assertEquals(expectedUser, actualUser);
         } catch (Exception e) {
@@ -92,12 +99,12 @@ class UserIntegrationTest {
         try {
             String name = "Slava";
             boolean isLegalEntity = true;
-            CloseableHttpClient httpClient = HttpClients.createDefault();
+            CloseableHttpClient httpClient = HttpClientCreator.getHttpClientWithAuthorization();
             ObjectNode objectNode = objectMapper.createObjectNode();
             objectNode.put("name", name);
             objectNode.put("legalEntity", isLegalEntity);
             String json = objectMapper.writeValueAsString(objectNode);
-            HttpPost httpPost = new HttpPost("http://localhost:8080/users");
+            HttpPost httpPost = new HttpPost("http://localhost:8080/operator/users");
             httpPost.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
             CloseableHttpResponse response = httpClient.execute(httpPost);
             assertEquals(201, response.getStatusLine().getStatusCode());
@@ -108,6 +115,8 @@ class UserIntegrationTest {
             if (resultSet.next()) actualUser = buildUser(resultSet);
             preparedStatement.close();
             connection.close();
+            httpClient.close();
+            response.close();
             User expectedUser = new User(4, "Slava", true);
             assertEquals(expectedUser, actualUser);
         } catch (Exception e) {

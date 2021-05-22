@@ -1,4 +1,4 @@
-package controller.implementation;
+package controller;
 
 import com.sun.net.httpserver.HttpExchange;
 import framework.annotations.Controller;

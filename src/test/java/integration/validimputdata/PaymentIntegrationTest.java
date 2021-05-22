@@ -4,13 +4,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import model.entities.Payment;
 import model.repository.util.DataBaseFiller;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -89,8 +94,12 @@ class PaymentIntegrationTest {
     @Test
     void getUnapprovedPayments() {
         try {
-            CloseableHttpClient httpClient = HttpClients.createDefault();
-            HttpGet httpGet = new HttpGet("http://localhost:8080/payments/unapproved");
+            CredentialsProvider provider = new BasicCredentialsProvider();
+            UsernamePasswordCredentials credentials
+                    = new UsernamePasswordCredentials("admin", "admin");
+            provider.setCredentials(AuthScope.ANY, credentials);
+            CloseableHttpClient httpClient = HttpClientBuilder.create().setDefaultCredentialsProvider(provider).build();
+            HttpGet httpGet = new HttpGet("http://localhost:8080/operator/payments/unapproved");
             CloseableHttpResponse response = httpClient.execute(httpGet);
             assertEquals(200, response.getStatusLine().getStatusCode());
             List<Payment> payments = new ArrayList<>();
@@ -116,8 +125,12 @@ class PaymentIntegrationTest {
             BigDecimal amount = BigDecimal.valueOf(1.00);
             int senderId = 2;
             int receiver_id = 1;
-            CloseableHttpClient httpClient = HttpClients.createDefault();
-            HttpPut httpPut = new HttpPut("http://localhost:8080/payments/approve/1");
+            CredentialsProvider provider = new BasicCredentialsProvider();
+            UsernamePasswordCredentials credentials
+                    = new UsernamePasswordCredentials("admin", "admin");
+            provider.setCredentials(AuthScope.ANY, credentials);
+            CloseableHttpClient httpClient = HttpClientBuilder.create().setDefaultCredentialsProvider(provider).build();
+            HttpPut httpPut = new HttpPut("http://localhost:8080/operator/payments/approve/1");
             CloseableHttpResponse response = httpClient.execute(httpPut);
             assertEquals(200, response.getStatusLine().getStatusCode());
             Connection connection = DriverManager.getConnection(PropertiesManager.URL);

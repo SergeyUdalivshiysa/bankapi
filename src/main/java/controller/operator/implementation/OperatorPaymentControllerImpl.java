@@ -1,24 +1,19 @@
-package controller.implementation;
+package controller.operator.implementation;
 
 import com.sun.net.httpserver.HttpExchange;
+import controller.operator.AbstractControllerWithAuthorization;
+import controller.operator.OperatorPaymentController;
 import framework.annotations.Controller;
 import framework.annotations.RequestMapping;
 import model.service.PaymentService;
 import model.service.implementation.PaymentServiceImpl;
 
-@Controller(path = "/payments")
-public class PaymentControllerImpl extends AbstractController implements controller.PaymentController {
+@Controller(path = "/operator/payments")
+public class OperatorPaymentControllerImpl extends AbstractControllerWithAuthorization implements OperatorPaymentController {
+    PaymentService paymentService;
 
-    private final PaymentService paymentService;
-
-    public PaymentControllerImpl() {
+    public OperatorPaymentControllerImpl() {
         paymentService = new PaymentServiceImpl();
-    }
-
-    @Override
-    @RequestMapping(path = "/", requestMethod = "POST")
-    public void createPayment(HttpExchange exchange) {
-        paymentService.handleCreatePayment(exchange);
     }
 
     @Override
@@ -32,5 +27,4 @@ public class PaymentControllerImpl extends AbstractController implements control
     public void getUnapprovedPayments(HttpExchange exchange) {
         paymentService.handleGetUnapprovedPayments(exchange);
     }
-
 }

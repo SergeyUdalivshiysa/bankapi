@@ -12,6 +12,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import utils.HttpClientCreator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -30,6 +31,8 @@ class UserIntegrationInvalidInputDataTest {
             CloseableHttpClient httpClient = HttpClients.createDefault();
             HttpGet httpGet = new HttpGet("http://localhost:8080/users/5/counterparties");
             CloseableHttpResponse response = httpClient.execute(httpGet);
+            response.close();
+            httpClient.close();
             assertEquals(404, response.getStatusLine().getStatusCode());
         } catch (Exception e) {
             e.printStackTrace();
@@ -51,6 +54,8 @@ class UserIntegrationInvalidInputDataTest {
             HttpPost httpPost = new HttpPost("http://localhost:8080/users/counterparties");
             httpPost.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
             CloseableHttpResponse response = httpClient.execute(httpPost);
+            response.close();
+            httpClient.close();
             assertEquals(400, response.getStatusLine().getStatusCode());
         } catch (Exception e) {
             e.printStackTrace();
@@ -63,15 +68,18 @@ class UserIntegrationInvalidInputDataTest {
         try {
             String name = "Slava";
             boolean isLegalEntity = true;
-            CloseableHttpClient httpClient = HttpClients.createDefault();
+            CloseableHttpClient httpClient = HttpClientCreator.getHttpClientWithAuthorization();
             ObjectNode objectNode = objectMapper.createObjectNode();
             objectNode.put("name", name);
             objectNode.put("legalEntity", "yes");
             String json = objectMapper.writeValueAsString(objectNode);
-            HttpPost httpPost = new HttpPost("http://localhost:8080/users");
+            HttpPost httpPost = new HttpPost("http://localhost:8080/operator/users");
             httpPost.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
             CloseableHttpResponse response = httpClient.execute(httpPost);
-            assertEquals(400, response.getStatusLine().getStatusCode());
+            int code = response.getStatusLine().getStatusCode();
+            response.close();
+            httpClient.close();
+            assertEquals(400, code);
         } catch (Exception e) {
             e.printStackTrace();
         }

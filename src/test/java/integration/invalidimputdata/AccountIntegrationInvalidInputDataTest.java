@@ -13,6 +13,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import utils.HttpClientCreator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -38,7 +39,10 @@ class AccountIntegrationInvalidInputDataTest {
             HttpPut httpPut = new HttpPut("http://localhost:8080/accounts");
             httpPut.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
             CloseableHttpResponse response = httpClient.execute(httpPut);
-            assertEquals(400, response.getStatusLine().getStatusCode());
+            int code = response.getStatusLine().getStatusCode();
+            response.close();
+            httpClient.close();
+            assertEquals(400, code);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -52,7 +56,10 @@ class AccountIntegrationInvalidInputDataTest {
             CloseableHttpClient httpClient = HttpClients.createDefault();
             HttpGet httpGet = new HttpGet("http://localhost:8080/accounts/" + accountId + "/balance");
             CloseableHttpResponse response = httpClient.execute(httpGet);
-            assertEquals(404, response.getStatusLine().getStatusCode());
+            int code = response.getStatusLine().getStatusCode();
+            response.close();
+            httpClient.close();
+            assertEquals(404, code);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -61,14 +68,17 @@ class AccountIntegrationInvalidInputDataTest {
     @Test
     void addAccount() {
         try {
-            CloseableHttpClient httpClient = HttpClients.createDefault();
+            CloseableHttpClient httpClient = HttpClientCreator.getHttpClientWithAuthorization();
             ObjectNode objectNode = objectMapper.createObjectNode();
             objectNode.put("userI", "1");
             String json = objectMapper.writeValueAsString(objectNode);
-            HttpPost httpPost = new HttpPost("http://localhost:8080/accounts");
+            HttpPost httpPost = new HttpPost("http://localhost:8080/operator/accounts");
             httpPost.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
             CloseableHttpResponse response = httpClient.execute(httpPost);
-            assertEquals(400, response.getStatusLine().getStatusCode());
+            int code = response.getStatusLine().getStatusCode();
+            response.close();
+            httpClient.close();
+            assertEquals(400, code);
         } catch (Exception e) {
             e.printStackTrace();
         }

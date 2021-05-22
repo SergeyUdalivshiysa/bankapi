@@ -15,6 +15,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import util.PropertiesManager;
+import utils.HttpClientCreator;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -54,6 +55,7 @@ class AccountIntegrationTest {
             if (resultSet.next()) actual = resultSet.getBigDecimal(1);
             preparedStatement.close();
             connection.close();
+            httpClient.close();
             assertEquals(new BigDecimal("400.50"), actual);
         } catch (Exception e) {
             e.printStackTrace();
@@ -77,6 +79,7 @@ class AccountIntegrationTest {
             if (resultSet.next()) actual = resultSet.getBigDecimal(1);
             preparedStatement.close();
             connection.close();
+            httpClient.close();
             assertEquals(new BigDecimal("200.50"), actual);
         } catch (Exception e) {
             e.printStackTrace();
@@ -86,11 +89,11 @@ class AccountIntegrationTest {
     @Test
     void addAccount() {
         try {
-            CloseableHttpClient httpClient = HttpClients.createDefault();
+            CloseableHttpClient httpClient = HttpClientCreator.getHttpClientWithAuthorization();
             ObjectNode objectNode = objectMapper.createObjectNode();
             objectNode.put("userId", "1");
             String json = objectMapper.writeValueAsString(objectNode);
-            HttpPost httpPost = new HttpPost("http://localhost:8080/accounts");
+            HttpPost httpPost = new HttpPost("http://localhost:8080/operator/accounts");
             httpPost.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
             CloseableHttpResponse response = httpClient.execute(httpPost);
             assertEquals(201, response.getStatusLine().getStatusCode());
@@ -102,6 +105,8 @@ class AccountIntegrationTest {
             Account expectedAccount = new Account(3, "1000000000000002", BigDecimal.valueOf(0).setScale(2), 1);
             preparedStatement.close();
             connection.close();
+            httpClient.close();
+            response.close();
             assertEquals(expectedAccount, actualAccount);
         } catch (Exception e) {
             e.printStackTrace();

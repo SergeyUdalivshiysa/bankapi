@@ -15,6 +15,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import util.PropertiesManager;
+import utils.HttpClientCreator;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -83,6 +84,8 @@ class CardIntegrationTest {
             if (resultSet.next()) actualCard = buildCard(resultSet);
             preparedStatement.close();
             connection.close();
+            response.close();
+            httpClient.close();
             Card expectedCard = new Card(3, "1000000000000002", 2, false);
             assertEquals(expectedCard, actualCard);
         } catch (Exception e) {
@@ -101,8 +104,8 @@ class CardIntegrationTest {
     @Test
     void findUnapproved() {
         try {
-            CloseableHttpClient httpClient = HttpClients.createDefault();
-            HttpGet httpGet = new HttpGet("http://localhost:8080/cards/unapproved");
+            CloseableHttpClient httpClient = HttpClientCreator.getHttpClientWithAuthorization();
+            HttpGet httpGet = new HttpGet("http://localhost:8080/operator/cards/unapproved");
             CloseableHttpResponse response = httpClient.execute(httpGet);
             assertEquals(200, response.getStatusLine().getStatusCode());
             Card card1 = new Card(2, "1000000000000001", 1, false);
@@ -115,6 +118,8 @@ class CardIntegrationTest {
                             StandardCharsets.UTF_8))
                     .lines()
                     .collect(Collectors.joining("\n"));
+            httpClient.close();
+            response.close();
             assertEquals(expected, actual);
         } catch (Exception e) {
             e.printStackTrace();
@@ -125,8 +130,8 @@ class CardIntegrationTest {
     void activateCard() {
         try {
             int id = 2;
-            CloseableHttpClient httpClient = HttpClients.createDefault();
-            HttpPut httpPut = new HttpPut("http://localhost:8080/cards/approve/" + id);
+            CloseableHttpClient httpClient = HttpClientCreator.getHttpClientWithAuthorization();
+            HttpPut httpPut = new HttpPut("http://localhost:8080/operator/cards/approve/" + id);
             CloseableHttpResponse response = httpClient.execute(httpPut);
             assertEquals(200, response.getStatusLine().getStatusCode());
             Connection connection = DriverManager.getConnection(PropertiesManager.URL);
@@ -137,6 +142,8 @@ class CardIntegrationTest {
             if (resultSet.next()) actual = resultSet.getBoolean(1);
             preparedStatement.close();
             connection.close();
+            httpClient.close();
+            response.close();
             assertTrue(actual);
         } catch (Exception e) {
             e.printStackTrace();

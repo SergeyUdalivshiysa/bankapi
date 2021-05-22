@@ -1,11 +1,13 @@
 //Список неподтвержденных платежей
-GET http://localhost:8080/payments/unapproved
+GET http://localhost:8080/operator/payments/unapproved
+Authorization: Basic admin admin
 Accept: application/json
 
 ###
 
 //Потдтверить платеж
-PUT http://localhost:8080/payments/approve/1
+PUT http://localhost:8080/operator/payments/approve/1
+Authorization: Basic admin admin
 Accept: application/json
 
 ###
@@ -13,13 +15,15 @@ Accept: application/json
 
 
 //Активировать карту
-PUT http://localhost:8080/cards/approve/1
+PUT http://localhost:8080/operator/cards/approve/2
+Authorization: Basic admin admin
 Accept: application/json
 
 ###
 
 //Список неактивированных карт
-GET http://localhost:8080/cards/unapproved
+GET http://localhost:8080/operator/cards/unapproved
+Authorization: Basic admin admin
 Accept: application/json
 
 ###

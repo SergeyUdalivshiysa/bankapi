@@ -12,6 +12,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import utils.HttpClientCreator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -19,9 +20,6 @@ class PaymentIntegrationInvalidInputDataTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final DataBaseFiller dataBaseFiller = new DataBaseFiller();
-    private final String getMoneyAmountSql = "select amount from account where id = ?";
-    private final String getApprovedFlag = "select approved from payment where id = ?";
-
 
     @BeforeEach
     void initializeDatabase() {
@@ -43,7 +41,10 @@ class PaymentIntegrationInvalidInputDataTest {
             HttpPost httpPost = new HttpPost("http://localhost:8080/payments");
             httpPost.setEntity(new StringEntity(json, ContentType.APPLICATION_JSON));
             CloseableHttpResponse response = httpClient.execute(httpPost);
-            assertEquals(400, response.getStatusLine().getStatusCode());
+            int code = response.getStatusLine().getStatusCode();
+            response.close();
+            httpClient.close();
+            assertEquals(400, code);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -53,10 +54,13 @@ class PaymentIntegrationInvalidInputDataTest {
     @Test
     void approvePayment() {
         try {
-            CloseableHttpClient httpClient = HttpClients.createDefault();
-            HttpPut httpPut = new HttpPut("http://localhost:8080/payments/approve/2");
+            CloseableHttpClient httpClient = HttpClientCreator.getHttpClientWithAuthorization();
+            HttpPut httpPut = new HttpPut("http://localhost:8080/operator/payments/approve/2");
             CloseableHttpResponse response = httpClient.execute(httpPut);
-            assertEquals(400, response.getStatusLine().getStatusCode());
+            int code = response.getStatusLine().getStatusCode();
+            response.close();
+            httpClient.close();
+            assertEquals(400, code);
         } catch (Exception e) {
             e.printStackTrace();
         }
