@@ -51,7 +51,7 @@ public class CardRepositoryImpl implements CardRepository {
         executeQuery(activateCardSql, statement -> {
             statement.setInt(1, id);
             int result = statement.executeUpdate();
-            if (result < 1) throw new SQLException("Wrong input data");
+            if (result < 1) throw new NotFoundException("Wrong input data");
             return null;
         });
     }

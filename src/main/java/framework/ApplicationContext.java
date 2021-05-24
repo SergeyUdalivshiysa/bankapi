@@ -1,15 +1,15 @@
 package framework;
 
-import java.util.List;
+import java.util.Map;
 
 public interface ApplicationContext {
 
     /**
-     * Returns the list of all found controllers
+     * Returns the Map of all found controllers classes and object instances
      *
      * @return
      */
-    List<Class<?>> getControllers();
+    Map<Class<?>, Object> getControllers();
 
     /**
      * Find all controllers and trigger its initialize

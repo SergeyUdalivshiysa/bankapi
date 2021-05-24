@@ -15,7 +15,7 @@ Accept: application/json
 
 
 //Активировать карту
-PUT http://localhost:8080/operator/cards/approve/2
+PUT http://localhost:8080/operator/cards/approve/7
 Authorization: Basic admin admin
 Accept: application/json
 
@@ -31,21 +31,24 @@ Accept: application/json
 
 
 //Добавление счета
-POST http://localhost:8080/accounts
+POST http://localhost:8080/operator/accounts
+Authorization: Basic admin admin
 Content-Type: application/json
 
 {
-  "userId": 1
+  "userId": 4
 }
 
 ###
 
 //Добавление физ лица
-POST http://localhost:8080/users
+POST http://localhost:8080/operator/users
+Authorization: Basic admin admin
 Content-Type: application/json
 
 {
-  "name": "Stas"
+  "name": "OOO Stas",
+  "legalEntity": true
 }
 
 ###
@@ -69,7 +72,7 @@ POST http://localhost:8080/users/counterparties
 Content-Type: application/json
 
 {
-  "partyId": 2,
+  "partyId": 1,
   "counterpartyId": 3
 }
 
@@ -111,7 +114,7 @@ Content-Type: application/json
 ###
 
 //Список карт по аккаунту
-GET http://localhost:8080/cards/9
+GET http://localhost:8080/cards/1
 Accept: application/json
 
 

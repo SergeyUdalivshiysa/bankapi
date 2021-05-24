@@ -11,23 +11,23 @@ public interface PaymentRepository extends Repository {
      * Handles creating a new payment
      *
      * @param paymentDTO
-     * @throws SQLException
+     * @throws SQLException in case of incorrect input data or internal database error
      */
     void addPayment(PaymentDTO paymentDTO) throws SQLException;
 
     /**
-     * Handles returning the list of unapprob=ved payments
+     * Handles returning the list of unapproved payments
      *
      * @return
-     * @throws SQLException
+     * @throws SQLException in case of internal database error
      */
     List<Payment> getUnapprovedPayments() throws SQLException;
 
     /**
-     * Handles approveing the payment, adding and subtracting money
+     * Handles approving the payment, adding and subtracting money
      *
-     * @param id
-     * @throws SQLException
+     * @param id Id of the certain payment
+     * @throws SQLException In case of incorrect input data or internal database error
      */
     void approvePayment(int id) throws SQLException;
 }

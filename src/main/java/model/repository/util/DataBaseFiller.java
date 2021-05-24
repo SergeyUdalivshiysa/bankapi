@@ -1,26 +1,29 @@
 package model.repository.util;
 
 import model.repository.Repository;
+import org.apache.maven.model.Model;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class DataBaseFiller implements Repository {
-
     public void fill() {
-        String sqlPath = "src/main/resources/init.sql";
-        String content = "";
-        try (Stream<String> lines = Files.lines(Paths.get(sqlPath))) {
-            content = lines.collect(Collectors.joining(System.lineSeparator()));
+        InputStream in = Model.class.getClassLoader().getResourceAsStream("init.sql");
+        StringBuilder textBuilder = new StringBuilder();
+        try (Reader reader = new BufferedReader(new InputStreamReader
+                (in, Charset.forName(StandardCharsets.UTF_8.name())))) {
+            int c = 0;
+            while ((c = reader.read()) != -1) {
+                textBuilder.append((char) c);
+            }
+            in.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
         try {
-            executeQuery(content, ps -> {
+            executeQuery(textBuilder.toString(), ps -> {
                 ps.executeUpdate();
                 return null;
             });
