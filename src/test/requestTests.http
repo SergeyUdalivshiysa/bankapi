@@ -36,7 +36,7 @@ Authorization: Basic admin admin
 Content-Type: application/json
 
 {
-  "userId": 4
+  "userId": 1
 }
 
 ###

@@ -64,7 +64,7 @@
                             <archive>
                                 <manifest>
                                     <mainClass>
-                                        App
+                                        ru.volegov.App
                                     </mainClass>
                                 </manifest>
                             </archive>

@@ -2,7 +2,6 @@ package integration.invalidimputdata;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import model.repository.util.DataBaseFiller;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -18,6 +17,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.volegov.model.repository.util.DataBaseFiller;
 import utils.HttpClientCreator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
